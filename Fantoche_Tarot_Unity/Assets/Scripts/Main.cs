@@ -31,6 +31,7 @@ public class Main : MonoBehaviour
     private CardType yellow_is_earth;
     private CardType green_is_air;
     private CardType blue_is_water;
+    private CardType joker_card;
 
 
     void Start()
@@ -61,27 +62,49 @@ public class Main : MonoBehaviour
         Current_CardTop = null;
         Current_CardBottom = null;
 
-        // defining card types
-        Debug.Log("All defined card types in game ->");
-        red_is_fire = new CardType("red_is_fire","Fire beats air.", "", "");
+        // defining card types - main color cards
+        Debug.Log("All defined card types in-game ->");
+        red_is_fire = new CardType("red_is_fire","Fire beats air.", "blue_is_water", "green_is_air");
         Debug.Log(red_is_fire.Name + ": " + red_is_fire.Description);
-        yellow_is_earth = new CardType("yellow_is_earth","Earth beats water.", "", "");
+        yellow_is_earth = new CardType("yellow_is_earth","Earth beats water.", "green_is_air", "blue_is_water");
         Debug.Log(yellow_is_earth.Name + ": " + yellow_is_earth.Description);
-        green_is_air = new CardType("green_is_air","Air beats earth.", "", "");
+        green_is_air = new CardType("green_is_air","Air beats earth.", "red_is_fire", "yellow_is_earth");
         Debug.Log(green_is_air.Name + ": " + green_is_air.Description);
-        blue_is_water = new CardType("blue_is_water","Water beats fire.","", "");
+        blue_is_water = new CardType("blue_is_water","Water beats fire.","yellow_is_earth", "red_is_fire");
         Debug.Log(blue_is_water.Name + ": " + blue_is_water.Description);
+
+        // defining card types - other cards
+        joker_card = new CardType("joker_card","Joker card resolves a truce by being laid upside down (negative) or in the correct position (positive).","none","none");
     }
 
     // Update is called once per frame
     void Update()
     {
+        // something something happens
         
+        // we calculate the outcome for the cards present on the board
+        CardRelationshipLogic();
+        CardMathematicalSummary();
+        FinalPhase();
     }
 
     void CardRelationshipLogic()
-    {
+    {   
+        var temp1 = false;
+        // here we determine the outcome for each new card presented
+        if (Current_CardLeft != null)
+        {
 
+        }
+
+    }
+    void CardMathematicalSummary()
+    {
+        //
+    }
+    void FinalPhase()
+    {
+        //
     }
 }
 
@@ -100,6 +123,5 @@ public class CardType
         Description = description;
         WeaknessAgainst = weaknessAgainst;
         StrenghtAgainst = strenghAgainst;
-
     }
 }
