@@ -13,6 +13,8 @@ public class MenuScript : MonoBehaviour
     public GameObject pauseScreen;
     private bool pauseMenu = false;
 
+    public Animator curtains;
+
     private void Update()
     {
         if (Input.GetKeyDown(KeyCode.Escape))
@@ -34,11 +36,22 @@ public class MenuScript : MonoBehaviour
 
     public void PlayGame()
     {
+        curtains.SetBool("CurtainWillClose", true);
+        Invoke("LoadScene", 1);
+    }
+
+    public void LoadScene()
+    {
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
-        Time.timeScale = 1;
     }
 
     public void BackToMenu()
+    {
+        curtains.SetBool("CurtainWillClose", true);
+        Invoke("LoadMenu", 1);
+    }
+
+    public void LoadMenu()
     {
         SceneManager.LoadScene(0);
     }
@@ -47,13 +60,11 @@ public class MenuScript : MonoBehaviour
     {
         if (pauseMenu)
         {
-            Time.timeScale = 1;
             pauseScreen.gameObject.SetActive(false);
             pauseMenu = false;
         }
         else
         {
-            Time.timeScale = 0;
             pauseScreen.gameObject.SetActive(true);
             pauseMenu = true;
         }
