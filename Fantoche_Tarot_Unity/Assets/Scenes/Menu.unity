@@ -530,6 +530,37 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1241577014}
   m_CullTransparentMesh: 1
+--- !u!1 &1463681008
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1463681009}
+  m_Layer: 0
+  m_Name: GameObject
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1463681009
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1463681008}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 764.8976, y: 580.29236, z: -11.119829}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1645908600
 GameObject:
   m_ObjectHideFlags: 0
@@ -882,6 +913,7 @@ PrefabInstance:
     m_RemovedGameObjects:
     - {fileID: 5246350923531784959, guid: 4054a306bfa01497fbd7ef39baeaef86, type: 3}
     - {fileID: 6174620981619699391, guid: 4054a306bfa01497fbd7ef39baeaef86, type: 3}
+    - {fileID: 8337995465001947252, guid: 4054a306bfa01497fbd7ef39baeaef86, type: 3}
     m_AddedGameObjects:
     - targetCorrespondingSourceObject: {fileID: 2227643367168962105, guid: 4054a306bfa01497fbd7ef39baeaef86, type: 3}
       insertIndex: 2
@@ -1303,7 +1335,8 @@ PrefabInstance:
       value: PlayGame
       objectReference: {fileID: 0}
     m_RemovedComponents: []
-    m_RemovedGameObjects: []
+    m_RemovedGameObjects:
+    - {fileID: 9151422590536639754, guid: 35b4add7ae32c4e94913e8069a168ecb, type: 3}
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 35b4add7ae32c4e94913e8069a168ecb, type: 3}
@@ -1314,3 +1347,4 @@ SceneRoots:
   - {fileID: 1645908603}
   - {fileID: 2113182087}
   - {fileID: 1945082033}
+  - {fileID: 1463681009}
