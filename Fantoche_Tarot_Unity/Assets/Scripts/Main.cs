@@ -133,7 +133,7 @@ public class Main : MonoBehaviour
     }
 
     // tracking card movements
-    public void StatusUpdate(string nameOfObject, string objectType, bool hoveringAbove = false, bool cardOnCursor = false, CardType cardType = null)
+    public bool StatusUpdate(string nameOfObject, string objectType, bool hoveringAbove = false, bool cardOnCursor = false, CardType cardType = null)
     {   
         // checking if the holder registers the mouse above and if a card is held right now
         if (objectType == "holder")
@@ -219,9 +219,30 @@ public class Main : MonoBehaviour
                 theCardIamHolding = "none";
             }
         }
+        return holdingCardRightNow;
     }
     public void LayPrep(string action)
     {
+        var temp = "none";
+        switch (requestedPlacement)
+        {
+            case "Card_Holder_Left":
+                temp = "left";
+                break;
+            case "Card_Holder_Right":
+                temp = "right";
+                break;
+            case "Card_Holder_Top":
+                temp = "top";
+                break;
+            case "Card_Holder_Bottom":
+                temp = "bottom";
+                break;
+            default:
+                // Debug.LogError("Card placement failed: A critical error occurred.");
+                break;
+        }
+
         if (action == "prep")
         {
             if (!mouseWasReleased)
@@ -238,25 +259,6 @@ public class Main : MonoBehaviour
             mouseWasReleased = true;
             if (backup1 != "none" && backup2 == true && backup3 == true)
             {
-                var temp = "none";
-                switch (requestedPlacement)
-                {
-                    case "Card_Holder_Left":
-                        temp = "left";
-                        break;
-                    case "Card_Holder_Right":
-                        temp = "right";
-                        break;
-                    case "Card_Holder_Top":
-                        temp = "top";
-                        break;
-                    case "Card_Holder_Bottom":
-                        temp = "bottom";
-                        break;
-                    default:
-                        Debug.LogError("Card placement failed: A critical error occurred.");
-                        break;
-                }
 
                 LayCards(theCardTypeIamHolding, temp);
 
@@ -276,6 +278,11 @@ public class Main : MonoBehaviour
                     Destroy(Current_Handcard3);
                     Current_Handcard3 = null; // emty reference
                 }
+            }
+            else if (requestedPlacement != null && isThisSpotFree == true && holdingCardRightNow == false)
+            {
+                RandomizeCard(temp, true, 1);
+                Debug.Log("requested random card on: " + temp);
             }
             mouseWasReleased = false;
         }
@@ -458,6 +465,7 @@ public class Main : MonoBehaviour
             Current_CardLeft = Instantiate(cardPrefab);
             Current_CardLeft.AddComponent<CardObject>().SetCardType(cardType);
             Current_CardLeft.GetComponent<CardObject>().DeactivateInteractions();
+            CardLeftHolder.GetComponent<CardHolder>().DeactivateInteractions();
             Current_CardLeft.transform.position = new UnityEngine.Vector2(cardLeftPos.x, cardLeftPos.y);
             Debug.Log("Card placed on the left: " + Current_CardLeft.GetComponent<CardObject>().cardType.Name);
         }
@@ -469,6 +477,7 @@ public class Main : MonoBehaviour
             Current_CardRight = Instantiate(cardPrefab);
             Current_CardRight.AddComponent<CardObject>().SetCardType(cardType);
             Current_CardRight.GetComponent<CardObject>().DeactivateInteractions();
+            CardRightHolder.GetComponent<CardHolder>().DeactivateInteractions();
             Current_CardRight.transform.position = new UnityEngine.Vector2(cardRightPos.x, cardRightPos.y);
             Debug.Log("Card placed on the right: " + Current_CardRight.GetComponent<CardObject>().cardType.Name);
         }
@@ -480,6 +489,7 @@ public class Main : MonoBehaviour
             Current_CardTop = Instantiate(cardPrefab);
             Current_CardTop.AddComponent<CardObject>().SetCardType(cardType);
             Current_CardTop.GetComponent<CardObject>().DeactivateInteractions();
+            CardTopHolder.GetComponent<CardHolder>().DeactivateInteractions();
             Current_CardTop.transform.position = new UnityEngine.Vector2(cardTopPos.x, cardTopPos.y);
             Debug.Log("Card placed on the top: " + Current_CardTop.GetComponent<CardObject>().cardType.Name);
         }
@@ -491,6 +501,7 @@ public class Main : MonoBehaviour
             Current_CardBottom = Instantiate(cardPrefab);
             Current_CardBottom.AddComponent<CardObject>().SetCardType(cardType);
             Current_CardBottom.GetComponent<CardObject>().DeactivateInteractions();
+            CardBottomHolder.GetComponent<CardHolder>().DeactivateInteractions();
             Current_CardBottom.transform.position = new UnityEngine.Vector2(cardBottomPos.x, cardBottomPos.y);
             Debug.Log("Card placed on the bottom: " + Current_CardBottom.GetComponent<CardObject>().cardType.Name);
         }

@@ -29,15 +29,24 @@ public class CardObject : MonoBehaviour
         originalPosition = transform.localPosition;
         collider = GetComponent<Collider2D>();
         mechanicsHolder = GameObject.Find("Mechanics_Holder");
+        spriteRenderer.sortingOrder = 99;
     }
     void OnMouseEnter()
     {
+        if (deactivateInteractions)
+        {
+            return;
+        }
         HighlightCard(true);
         isHovering = true;
     }
 
     void OnMouseExit()
     {
+        if (deactivateInteractions)
+        {
+            return;
+        }
         HighlightCard(false);
         isHovering = false;
     }
@@ -47,7 +56,6 @@ public class CardObject : MonoBehaviour
         {
             return;
         }
-        
         if (isHovering)
         {
             spriteRenderer.color = new Color(0.8f, 0.8f, 0.8f, 1f);
