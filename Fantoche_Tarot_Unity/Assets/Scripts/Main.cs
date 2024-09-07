@@ -41,7 +41,7 @@ public class Main : MonoBehaviour
 
     void Start()
     {
-        // game starts & checking if setup correct
+        // game starts & checking if setup correct & loads first pair
         pairNumber = 1;
         if (CardLeftHolder == null || CardRightHolder == null || CardTopHolder == null || CardBottomHolder == null)
         {
@@ -55,11 +55,11 @@ public class Main : MonoBehaviour
         cardTopPos = CardTopHolder.transform.position;
         cardBottomPos = CardBottomHolder.transform.position;
 
-        // deactivate holders after initialization of positions
-        CardLeftHolder.SetActive(false);
-        CardRightHolder.SetActive(false);
-        CardTopHolder.SetActive(false);
-        CardBottomHolder.SetActive(false);
+        // deactivate holders after initialization of positions -> No, since we use them as placement ui, but we deactivate them when a card is placed
+        //CardLeftHolder.SetActive(false);
+        //CardRightHolder.SetActive(false);
+        //CardTopHolder.SetActive(false);
+        //CardBottomHolder.SetActive(false);
 
         // current cards are set to null at start
         Current_CardLeft = null;
