@@ -7,10 +7,13 @@ using UnityEngine;
 
 public class Main : MonoBehaviour
 {
-    [Header("Setup & General")]
-    public GameObject Pair;
+    [Header("[Debug]")]
     public int pairNumber;
     public int currentOutcomePosNeg;
+    
+    [Space(20)]
+    [Header("Setup & General")]
+    public GameObject Pair;
     [Space(20)]
     public GameObject CardLeftHolder;
     private UnityEngine.Vector2 cardLeftPos;
