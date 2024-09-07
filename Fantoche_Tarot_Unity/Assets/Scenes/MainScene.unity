@@ -1042,15 +1042,21 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   pairNumber: 0
   currentOutcomePosNeg: 0
+  allowedAmountOfHandcards: 0
   Current_CardLeft: {fileID: 0}
   Current_CardRight: {fileID: 0}
   Current_CardTop: {fileID: 0}
   Current_CardBottom: {fileID: 0}
-  Pairs: []
+  Pairs:
+  - {fileID: 1803490729}
+  - {fileID: 781690780}
   CardLeftHolder: {fileID: 1255389073}
   CardRightHolder: {fileID: 1977002925}
   CardTopHolder: {fileID: 746560968}
   CardBottomHolder: {fileID: 1359348704}
+  HandcardHolder1: {fileID: 1999221727}
+  HandcardHolder2: {fileID: 1640039641}
+  HandcardHolder3: {fileID: 188832053}
 --- !u!4 &490202649
 Transform:
   m_ObjectHideFlags: 0
@@ -1343,15 +1349,15 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 1
-  m_Sprite: {fileID: 21300000, guid: 372bac3d9dcb44da097cbe77082251b5, type: 3}
+  m_Sprite: {fileID: 21300000, guid: ea9f802e28ab14e35852029907fc70e4, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 1, y: 1}
+  m_Size: {x: 1.73, y: 3.03}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 0
+  m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!4 &724284458
@@ -2854,12 +2860,12 @@ SceneRoots:
   - {fileID: 1977002927}
   - {fileID: 746560970}
   - {fileID: 1359348706}
-  - {fileID: 44692227}
-  - {fileID: 743328580}
   - {fileID: 1999221729}
   - {fileID: 1640039643}
   - {fileID: 188832055}
-  - {fileID: 969281382}
   - {fileID: 123342439}
+  - {fileID: 969281382}
+  - {fileID: 44692227}
+  - {fileID: 743328580}
   - {fileID: 1803490731}
   - {fileID: 781690782}

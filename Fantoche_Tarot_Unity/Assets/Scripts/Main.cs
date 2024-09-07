@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Numerics;
@@ -10,7 +11,9 @@ public class Main : MonoBehaviour
     [Header("[Debug]")]
     public int pairNumber;
     private bool continuePairs = false;
+    private bool startNextRound = false;
     public int currentOutcomePosNeg;
+    public int allowedAmountOfHandcards;
 
     [Space(20)]
     public GameObject Current_CardLeft;
@@ -33,6 +36,14 @@ public class Main : MonoBehaviour
     private UnityEngine.Vector2 cardBottomPos;
 
     [Space(20)]
+    public GameObject HandcardHolder1;
+    private UnityEngine.Vector2 handcard1Pos;
+    public GameObject HandcardHolder2;
+    private UnityEngine.Vector2 handcard2Pos;
+    public GameObject HandcardHolder3;
+    private UnityEngine.Vector2 handcard3Pos;
+
+    [Space(20)]
     [Header("Card Types")]
     private CardType red_is_fire;
     private CardType yellow_is_earth;
@@ -44,6 +55,7 @@ public class Main : MonoBehaviour
     {
         // game starts & checking if setup correct & loads first pair
         continuePairs = true;
+        allowedAmountOfHandcards = 3;
         if (CardLeftHolder == null || CardRightHolder == null || CardTopHolder == null || CardBottomHolder == null)
         {
             Debug.LogError("CARD SPOTS NOT ASSIGNED!");
@@ -55,12 +67,21 @@ public class Main : MonoBehaviour
         cardRightPos = CardRightHolder.transform.position;
         cardTopPos = CardTopHolder.transform.position;
         cardBottomPos = CardBottomHolder.transform.position;
+        handcard1Pos = HandcardHolder1.transform.position;
+        handcard2Pos = HandcardHolder2.transform.position;
+        handcard3Pos = HandcardHolder3.transform.position;
+
+
 
         // deactivate holders after initialization of positions -> No, since we use them as placement ui, but we deactivate them when a card is placed
         //CardLeftHolder.SetActive(false);
         //CardRightHolder.SetActive(false);
         //CardTopHolder.SetActive(false);
         //CardBottomHolder.SetActive(false);
+
+        HandcardHolder1.SetActive(false);
+        HandcardHolder2.SetActive(false);
+        HandcardHolder3.SetActive(false);
 
         // current cards are set to null at start
         Current_CardLeft = null;
@@ -126,12 +147,46 @@ public class Main : MonoBehaviour
     }
     void DisplayHandCards()
     {
+        // every round we display max. 3 cards - every round we get +1 card
+        if (startNextRound == true)
+        {
+            startNextRound = false;
+            continuePairs = true;
+            allowedAmountOfHandcards += 1;
+        }
+        else
+        {
+            return;
+        }
+
+        if (allowedAmountOfHandcards > 3)
+        {
+            allowedAmountOfHandcards = 3;
+
+            // give a random selection of cards but no +1
+            StartCoroutine(NewCards(allowedAmountOfHandcards));
+        }
+        else
+        {
+            // give a random selection of cards and add the +1 a moment later
+            StartCoroutine(NewCards(allowedAmountOfHandcards-1));
+            StartCoroutine(ExtraCards(1));
+        }
+    }
+    private IEnumerator NewCards(int amount)
+    {
+        yield return new WaitForSeconds(1.5f);
+        RandomizeCard("void", false, amount);
 
     }
-
+    private IEnumerator ExtraCards(int amount)
+    {
+        yield return new WaitForSeconds(2.5f);
+        RandomizeCard("void", false, amount);
+    }
 
     // more specific card logic ---> Lay, Randomize, RelationshipLogic
-    void RadomizeCard(string requestedSpot)
+    public void RandomizeCard(string requestedSpot, bool isSuposedToLay, int amount = 1)
     {
         List<CardType> possibleCards = new List<CardType>()
         {
@@ -141,8 +196,16 @@ public class Main : MonoBehaviour
         blue_is_water,
         };
 
-        CardType randomCard = possibleCards[Random.Range(0, possibleCards.Count)];
-        LayCards(randomCard, requestedSpot);
+        CardType randomCard = possibleCards[UnityEngine.Random.Range(0, possibleCards.Count)];
+
+        if (isSuposedToLay == true)
+        {
+            LayCards(randomCard, requestedSpot);
+        }
+        else
+        {
+            // give selection? We might have to remove or modify the randomizer tho
+        }
     }
     void LayCards(CardType cardType, string requestedSpot)
     {
@@ -328,6 +391,7 @@ public class Main : MonoBehaviour
     void FinalPhase()
     {
         // we have an outcome, what do we do with it? - And when do we reset it for the next couple?
+        startNextRound = true;
     }
 }
 
