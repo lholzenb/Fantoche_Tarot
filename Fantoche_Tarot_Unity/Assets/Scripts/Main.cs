@@ -9,11 +9,19 @@ public class Main : MonoBehaviour
 {
     [Header("[Debug]")]
     public int pairNumber;
+    private bool continuePairs = false;
     public int currentOutcomePosNeg;
+
+    [Space(20)]
+    public GameObject Current_CardLeft;
+    public GameObject Current_CardRight;
+    public GameObject Current_CardTop;
+    public GameObject Current_CardBottom;
     
     [Space(20)]
     [Header("Setup & General")]
-    public GameObject Pair;
+    public List<GameObject> Pairs = new List<GameObject>();
+
     [Space(20)]
     public GameObject CardLeftHolder;
     private UnityEngine.Vector2 cardLeftPos;
@@ -23,13 +31,6 @@ public class Main : MonoBehaviour
     private UnityEngine.Vector2 cardTopPos;
     public GameObject CardBottomHolder;
     private UnityEngine.Vector2 cardBottomPos;
-
-    [Space(20)]
-    [Header("Current Cards")]
-    public GameObject Current_CardLeft;
-    public GameObject Current_CardRight;
-    public GameObject Current_CardTop;
-    public GameObject Current_CardBottom;
 
     [Space(20)]
     [Header("Card Types")]
@@ -42,7 +43,7 @@ public class Main : MonoBehaviour
     void Start()
     {
         // game starts & checking if setup correct & loads first pair
-        pairNumber = 1;
+        continuePairs = true;
         if (CardLeftHolder == null || CardRightHolder == null || CardTopHolder == null || CardBottomHolder == null)
         {
             Debug.LogError("CARD SPOTS NOT ASSIGNED!");
@@ -85,7 +86,13 @@ public class Main : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        // something something happens
+        // 1.: We start the round by displaying or starting an animation for the according pairs.
+        DisplayPairs();
+        // 2.: Making selection of hand-cards avaiable.
+        DisplayHandCards();
+
+
+
         // LayCards(); -> Only triggering this when we want to trigger an action
 
         // HIER NOCH GENAUER DEFINIEREN
@@ -94,7 +101,36 @@ public class Main : MonoBehaviour
         CardRelationshipLogic();
         FinalPhase();
     }
+    
+    void DisplayPairs()
+    {
+        if (continuePairs == true)
+        {
+            continuePairs = false;
+            pairNumber += 1;
 
+            // this only runs once for each according pairs
+            // you can trigger an animation and/or couroutine for displaying a pair down below (fancy slide-in perhaps?)
+
+            if (Pairs.Count > 0 && pairNumber < Pairs.Count) // checking if not emty or out of range
+            {
+                /*
+                // For animators & in-engine polishing:
+                // Displaying the correct pair, arrays start at 0.
+                -> Or do this in a coroutine and make a new array for animations, it's up to you!
+                */
+                Pairs[(pairNumber-1)].SetActive(true);
+                Debug.Log("Pair activated: " + Pairs[(pairNumber-1)].name);
+            }
+        }
+    }
+    void DisplayHandCards()
+    {
+
+    }
+
+
+    // more specific card logic ---> Lay, Randomize, RelationshipLogic
     void RadomizeCard(string requestedSpot)
     {
         List<CardType> possibleCards = new List<CardType>()
@@ -108,7 +144,6 @@ public class Main : MonoBehaviour
         CardType randomCard = possibleCards[Random.Range(0, possibleCards.Count)];
         LayCards(randomCard, requestedSpot);
     }
-
     void LayCards(CardType cardType, string requestedSpot)
     {
         // at the beginning all spots should be open (interaction true)
