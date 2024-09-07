@@ -1175,6 +1175,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 2113182087}
     m_Modifications:
+    - target: {fileID: 78122233680731819, guid: 4054a306bfa01497fbd7ef39baeaef86, type: 3}
+      propertyPath: m_text
+      value: Lovers Fortune
+      objectReference: {fileID: 0}
     - target: {fileID: 1035792928793417198, guid: 4054a306bfa01497fbd7ef39baeaef86, type: 3}
       propertyPath: m_AnchoredPosition.x
       value: -1100
@@ -1325,7 +1329,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8337995465001947252, guid: 4054a306bfa01497fbd7ef39baeaef86, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8348504615418379209, guid: 4054a306bfa01497fbd7ef39baeaef86, type: 3}
       propertyPath: m_text
@@ -1441,7 +1445,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2998050679558673373, guid: 35b4add7ae32c4e94913e8069a168ecb, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8990653642874536260, guid: 35b4add7ae32c4e94913e8069a168ecb, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
