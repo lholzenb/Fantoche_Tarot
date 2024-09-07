@@ -22,8 +22,20 @@ public class Main : MonoBehaviour
     public GameObject Current_CardBottom;
     
     [Space(20)]
+    public GameObject Current_Handcard1;
+    public GameObject Current_Handcard2;
+    public GameObject Current_Handcard3;
+    
+    [Space(20)]
     [Header("Setup & General")]
     public List<GameObject> Pairs = new List<GameObject>();
+    public float TimePassedUntilHandcardsAreRevealed = 1.5f;
+
+    [Space(20)]
+    public GameObject cardPrefab_HandcardTypeBlue;
+    public GameObject cardPrefab_HandcardTypeGreen;
+    public GameObject cardPrefab_HandcardTypeRed;   
+    public GameObject cardPrefab_HandcardTypeYellow;
 
     [Space(20)]
     public GameObject CardLeftHolder;
@@ -54,8 +66,8 @@ public class Main : MonoBehaviour
     void Start()
     {
         // game starts & checking if setup correct & loads first pair
-        continuePairs = true;
         allowedAmountOfHandcards = 3;
+        startNextRound = true;
         if (CardLeftHolder == null || CardRightHolder == null || CardTopHolder == null || CardBottomHolder == null)
         {
             Debug.LogError("CARD SPOTS NOT ASSIGNED!");
@@ -70,8 +82,6 @@ public class Main : MonoBehaviour
         handcard1Pos = HandcardHolder1.transform.position;
         handcard2Pos = HandcardHolder2.transform.position;
         handcard3Pos = HandcardHolder3.transform.position;
-
-
 
         // deactivate holders after initialization of positions -> No, since we use them as placement ui, but we deactivate them when a card is placed
         //CardLeftHolder.SetActive(false);
@@ -88,6 +98,10 @@ public class Main : MonoBehaviour
         Current_CardRight = null;
         Current_CardTop = null;
         Current_CardBottom = null;
+
+        Current_Handcard1 = null;
+        Current_Handcard2 = null;
+        Current_Handcard3 = null;
 
         // defining card types - main color cards
         Debug.Log("All defined card types in-game ->");
@@ -111,8 +125,6 @@ public class Main : MonoBehaviour
         DisplayPairs();
         // 2.: Making selection of hand-cards avaiable.
         DisplayHandCards();
-
-
 
         // LayCards(); -> Only triggering this when we want to trigger an action
 
@@ -153,6 +165,7 @@ public class Main : MonoBehaviour
             startNextRound = false;
             continuePairs = true;
             allowedAmountOfHandcards += 1;
+             Debug.LogWarning("Lol");
         }
         else
         {
@@ -175,13 +188,13 @@ public class Main : MonoBehaviour
     }
     private IEnumerator NewCards(int amount)
     {
-        yield return new WaitForSeconds(1.5f);
+        yield return new WaitForSeconds(TimePassedUntilHandcardsAreRevealed);
         RandomizeCard("void", false, amount);
 
     }
     private IEnumerator ExtraCards(int amount)
     {
-        yield return new WaitForSeconds(2.5f);
+        yield return new WaitForSeconds(TimePassedUntilHandcardsAreRevealed + 1f);
         RandomizeCard("void", false, amount);
     }
 
@@ -196,17 +209,81 @@ public class Main : MonoBehaviour
         blue_is_water,
         };
 
-        CardType randomCard = possibleCards[UnityEngine.Random.Range(0, possibleCards.Count)];
-
         if (isSuposedToLay == true)
         {
+            CardType randomCard = possibleCards[UnityEngine.Random.Range(0, possibleCards.Count)];
             LayCards(randomCard, requestedSpot);
         }
         else
         {
-            // give selection? We might have to remove or modify the randomizer tho
+            // giving a selection for the amount specified
+            List<CardType> randomSelection = new List<CardType>();
+            for (int i = 0; i < amount; i++)
+            {
+                CardType randomCard = possibleCards[UnityEngine.Random.Range(0, possibleCards.Count)];
+
+                // remove doubles (diverse selection)
+                while (randomSelection.Contains(randomCard))
+                {
+                    randomCard = possibleCards[UnityEngine.Random.Range(0, possibleCards.Count)];
+                }
+                randomSelection.Add(randomCard);
+            }
+
+            // using the output
+            StartCoroutine(CardInstanceDelay(randomSelection));
         }
     }
+    IEnumerator CardInstanceDelay(List<CardType> randomSelection)
+    {
+        float baseDelay = 0f;
+        foreach (CardType cardType in randomSelection)
+        {
+            Debug.Log("Handcard: " + cardType.Name);
+            GameObject cardPrefab = SelectCardPrefab(cardType);
+            yield return new WaitForSeconds(baseDelay);
+            baseDelay = 0.5f;
+
+            // handcard slot checking
+            if (Current_Handcard1 == null)
+            {
+                Current_Handcard1 = Instantiate(cardPrefab);
+                Current_Handcard1.AddComponent<CardObject>().SetCardType(cardType);
+                Current_Handcard1.transform.position = new UnityEngine.Vector2(handcard1Pos.x, handcard1Pos.y);
+            }
+            else if (Current_Handcard2 == null)
+            {
+                Current_Handcard2 = Instantiate(cardPrefab);
+                Current_Handcard2.AddComponent<CardObject>().SetCardType(cardType);
+                Current_Handcard2.transform.position = new UnityEngine.Vector2(handcard2Pos.x, handcard2Pos.y);
+            }
+            else if (Current_Handcard3 == null)
+            {
+                Current_Handcard3 = Instantiate(cardPrefab);
+                Current_Handcard3.AddComponent<CardObject>().SetCardType(cardType);
+                Current_Handcard3.transform.position = new UnityEngine.Vector2(handcard3Pos.x, handcard3Pos.y);
+            }
+        }
+    }
+    // we use an extra method to return the correct card prefab for the cardType input
+    GameObject SelectCardPrefab(CardType cardType)
+    {
+        switch (cardType.Name)
+        {
+            case "Blue":
+                return cardPrefab_HandcardTypeBlue;
+            case "Green":
+                return cardPrefab_HandcardTypeGreen;
+            case "Red":
+                return cardPrefab_HandcardTypeRed;
+            case "Yellow":
+                return cardPrefab_HandcardTypeYellow;
+            default:
+                Debug.LogWarning("Unknown card type: " + cardType.Name);
+                return null;
+        }
+    }
+
     void LayCards(CardType cardType, string requestedSpot)
     {
         // at the beginning all spots should be open (interaction true)
@@ -391,7 +468,7 @@ public class Main : MonoBehaviour
     void FinalPhase()
     {
         // we have an outcome, what do we do with it? - And when do we reset it for the next couple?
-        startNextRound = true;
+        // startNextRound = true; NOT YET
     }
 }
 
