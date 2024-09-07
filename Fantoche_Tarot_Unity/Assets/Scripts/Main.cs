@@ -67,12 +67,21 @@ public class Main : MonoBehaviour
         cardRightPos = CardRightHolder.transform.position;
         cardTopPos = CardTopHolder.transform.position;
         cardBottomPos = CardBottomHolder.transform.position;
+        handcard1Pos = HandcardHolder1.transform.position;
+        handcard2Pos = HandcardHolder2.transform.position;
+        handcard3Pos = HandcardHolder3.transform.position;
+
+
 
         // deactivate holders after initialization of positions -> No, since we use them as placement ui, but we deactivate them when a card is placed
         //CardLeftHolder.SetActive(false);
         //CardRightHolder.SetActive(false);
         //CardTopHolder.SetActive(false);
         //CardBottomHolder.SetActive(false);
+
+        HandcardHolder1.SetActive(false);
+        HandcardHolder2.SetActive(false);
+        HandcardHolder3.SetActive(false);
 
         // current cards are set to null at start
         Current_CardLeft = null;
