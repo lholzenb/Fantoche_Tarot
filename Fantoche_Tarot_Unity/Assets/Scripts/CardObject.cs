@@ -9,7 +9,7 @@ public class CardObject : MonoBehaviour
     private SpriteRenderer spriteRenderer;
     Collider2D collider;
     private GameObject mechanicsHolder;
-
+    private bool deactivateInteractions = false;
     private Vector2 originalPosition;
     private bool isHovering = false;
     private bool isHolding = false;
@@ -43,6 +43,11 @@ public class CardObject : MonoBehaviour
     }
     void OnMouseDown()
     {
+        if (deactivateInteractions)
+        {
+            return;
+        }
+        
         if (isHovering)
         {
             spriteRenderer.color = new Color(0.8f, 0.8f, 0.8f, 1f);
@@ -51,6 +56,10 @@ public class CardObject : MonoBehaviour
     }
     void OnMouseUp()
     {
+        if (deactivateInteractions)
+        {
+            return;
+        }
         mechanicsHolder.GetComponent<Main>().LayPrep("lay");
         spriteRenderer.color = Color.white;
         isHolding = false;
@@ -61,6 +70,10 @@ public class CardObject : MonoBehaviour
 
     void Update()
     {
+        if (deactivateInteractions)
+        {
+            return;
+        }
         Vector3 mousePosition = Input.mousePosition;
         Vector3 objectPosition = Camera.main.ScreenToWorldPoint(mousePosition);
         if (isHolding)
@@ -90,5 +103,10 @@ public class CardObject : MonoBehaviour
             transform.localScale = baseScale;
             spriteRenderer.sortingOrder -= 1;
         }
+    }
+
+    public void DeactivateInteractions()
+    {
+        deactivateInteractions = true;
     }
 }

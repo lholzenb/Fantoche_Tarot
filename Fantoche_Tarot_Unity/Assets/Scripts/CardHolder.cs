@@ -5,7 +5,7 @@ using UnityEngine;
 public class CardHolder : MonoBehaviour
 {
     private GameObject mechanicsHolder;
-    private bool isHovering;
+    private bool isHovering = false;
     void OnMouseEnter()
     {
         isHovering = true;

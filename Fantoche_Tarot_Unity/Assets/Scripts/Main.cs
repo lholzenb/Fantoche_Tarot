@@ -259,8 +259,24 @@ public class Main : MonoBehaviour
                 }
 
                 LayCards(theCardTypeIamHolding, temp);
-            }
 
+                // delete the card in hand by checking if it matches with the laid one
+                if (Current_Handcard1 != null && Current_Handcard1.GetComponent<CardObject>().cardType.Name == theCardTypeIamHolding.Name)
+                {
+                    Destroy(Current_Handcard1);
+                    Current_Handcard1 = null; // emty reference
+                }
+                else if (Current_Handcard2 != null && Current_Handcard2.GetComponent<CardObject>().cardType.Name == theCardTypeIamHolding.Name)
+                {
+                    Destroy(Current_Handcard2);
+                    Current_Handcard2 = null; // emty reference
+                }
+                else if (Current_Handcard3 != null && Current_Handcard3.GetComponent<CardObject>().cardType.Name == theCardTypeIamHolding.Name)
+                {
+                    Destroy(Current_Handcard3);
+                    Current_Handcard3 = null; // emty reference
+                }
+            }
             mouseWasReleased = false;
         }
     }
@@ -379,12 +395,13 @@ public class Main : MonoBehaviour
     }
     IEnumerator CardInstanceDelay(List<CardType> randomSelection)
     {
-        float baseDelay = 0.5f;
+        float baseDelay = 0f;
         foreach (CardType cardType in randomSelection)
         {
             Debug.Log("Handcard: " + cardType.Name);
             GameObject cardPrefab = SelectCardPrefab(cardType);
             yield return new WaitForSeconds(baseDelay);
+            baseDelay = 0.5f;
 
             // handcard slot checking
             if (Current_Handcard1 == null)
@@ -430,7 +447,7 @@ public class Main : MonoBehaviour
     {
         // at the beginning all spots should be open (interaction true)
         // -> set all interactibles to "active"
-
+        GameObject cardPrefab = SelectCardPrefab(cardType);
 
         // assigning card type to slots
         if (Current_CardLeft == null && requestedSpot == "left")
@@ -438,8 +455,10 @@ public class Main : MonoBehaviour
             // -> set the respective interactible to "disabled"
 
             // we assign the type of the card chosen
-            Current_CardLeft = new GameObject();
+            Current_CardLeft = Instantiate(cardPrefab);
             Current_CardLeft.AddComponent<CardObject>().SetCardType(cardType);
+            Current_CardLeft.GetComponent<CardObject>().DeactivateInteractions();
+            Current_CardLeft.transform.position = new UnityEngine.Vector2(cardLeftPos.x, cardLeftPos.y);
             Debug.Log("Card placed on the left: " + Current_CardLeft.GetComponent<CardObject>().cardType.Name);
         }
         else if (Current_CardRight == null && requestedSpot == "right")
@@ -447,8 +466,10 @@ public class Main : MonoBehaviour
             // -> set the respective interactible to "disabled"
 
             // we assign the type of the card chosen
-            Current_CardRight = new GameObject();
+            Current_CardRight = Instantiate(cardPrefab);
             Current_CardRight.AddComponent<CardObject>().SetCardType(cardType);
+            Current_CardRight.GetComponent<CardObject>().DeactivateInteractions();
+            Current_CardRight.transform.position = new UnityEngine.Vector2(cardRightPos.x, cardRightPos.y);
             Debug.Log("Card placed on the right: " + Current_CardRight.GetComponent<CardObject>().cardType.Name);
         }
         else if (Current_CardTop == null && requestedSpot == "top")
@@ -456,8 +477,10 @@ public class Main : MonoBehaviour
             // -> set the respective interactible to "disabled"
 
             // we assign the type of the card chosen
-            Current_CardTop = new GameObject();
+            Current_CardTop = Instantiate(cardPrefab);
             Current_CardTop.AddComponent<CardObject>().SetCardType(cardType);
+            Current_CardTop.GetComponent<CardObject>().DeactivateInteractions();
+            Current_CardTop.transform.position = new UnityEngine.Vector2(cardTopPos.x, cardTopPos.y);
             Debug.Log("Card placed on the top: " + Current_CardTop.GetComponent<CardObject>().cardType.Name);
         }
         else if (Current_CardBottom == null && requestedSpot == "bottom")
@@ -465,8 +488,10 @@ public class Main : MonoBehaviour
             // -> set the respective interactible to "disabled"
 
             // we assign the type of the card chosen
-            Current_CardBottom = new GameObject();
+            Current_CardBottom = Instantiate(cardPrefab);
             Current_CardBottom.AddComponent<CardObject>().SetCardType(cardType);
+            Current_CardBottom.GetComponent<CardObject>().DeactivateInteractions();
+            Current_CardBottom.transform.position = new UnityEngine.Vector2(cardBottomPos.x, cardBottomPos.y);
             Debug.Log("Card placed on the bottom: " + Current_CardBottom.GetComponent<CardObject>().cardType.Name);
         }
         else
@@ -590,6 +615,10 @@ public class Main : MonoBehaviour
     }
     int CardCompareWith(GameObject ToCompareWith, GameObject myCard)
     {
+        if (ToCompareWith == null)
+        {
+            return 0;
+        }
         var myCardObject = myCard.GetComponent<CardObject>();
         string myWeakness = myCardObject.cardType.WeaknessAgainst;
         string myStrenght = myCardObject.cardType.StrenghtAgainst;
