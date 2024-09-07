@@ -8,6 +8,8 @@ public class DialogueManager : MonoBehaviour
 {
     public TextMeshProUGUI dialogueText;
 
+    public Main main;
+
     public int scoreThreshold = 0;
     private int playerScore;
     public Animator animatorDialogue;
@@ -55,10 +57,10 @@ public class DialogueManager : MonoBehaviour
         "The stars are aligned… for a breakup. But hey, more room in your life for pizza and wine!"
     };
 
-    public void UpdateScore(int score)
+    public void UpdateScore()
     {
         animatorDialogue.SetBool("DialogueOpen", true);
-        playerScore = score;
+        playerScore = main.currentOutcomePosNeg;
         DisplayDialogue();
     }
 
