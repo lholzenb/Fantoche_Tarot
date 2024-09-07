@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics.Tracing;
 using System.Numerics;
 using Unity.VisualScripting;
 using Unity.VisualScripting.FullSerializer;
@@ -14,6 +15,19 @@ public class Main : MonoBehaviour
     private bool startNextRound = false;
     public int currentOutcomePosNeg;
     public int allowedAmountOfHandcards;
+
+    [Space(20)]
+    public string requestedPlacement = "none";
+    public bool isThisSpotFree = false;
+    public bool holdingCardRightNow = false;
+    public string theCardIamHolding = "none";
+    private CardType theCardTypeIamHolding;
+    private bool mouseWasReleased = false;
+
+    string backup1;
+    bool backup2;
+    bool backup3;
+    CardType backup4;
 
     [Space(20)]
     public GameObject Current_CardLeft;
@@ -118,7 +132,138 @@ public class Main : MonoBehaviour
         joker_card = new CardType("Joker","Joker card resolves a truce by being laid upside down (negative) or in the correct position (positive).","none","none");
     }
 
-    // Update is called once per frame
+    // tracking card movements
+    public void StatusUpdate(string nameOfObject, string objectType, bool hoveringAbove = false, bool cardOnCursor = false, CardType cardType = null)
+    {   
+        // checking if the holder registers the mouse above and if a card is held right now
+        if (objectType == "holder")
+        {
+            if (hoveringAbove)
+            {
+                requestedPlacement = nameOfObject;
+
+                 if (nameOfObject == "Card_Holder_Left")
+                {
+                    if (Current_CardLeft == null)
+                    {
+                        isThisSpotFree = true;
+                    }
+                    else
+                    {
+                        isThisSpotFree = false;
+                    }
+                }
+                else if (nameOfObject == "Card_Holder_Right")
+                {
+                    if (Current_CardRight == null)
+                    {
+                        isThisSpotFree = true;
+                    }
+                    else
+                    {
+                        isThisSpotFree = false;
+                    }
+                }
+                else if (nameOfObject == "Card_Holder_Top")
+                {
+                    if (Current_CardTop == null)
+                    {
+                        isThisSpotFree = true;
+                    }
+                    else
+                    {
+                        isThisSpotFree = false;
+                    }
+                }
+                else if (nameOfObject == "Card_Holder_Bottom")
+                {
+                    if (Current_CardBottom == null)
+                    {
+                        isThisSpotFree = true;
+                    }
+                    else
+                    {
+                        isThisSpotFree = false;
+                    }
+                }
+                else
+                {
+                    Debug.LogWarning("NOPE BRO, THIS AIN'T IT");
+                }
+            }
+            else 
+            {
+                requestedPlacement = "none";
+                isThisSpotFree = false;
+            }
+
+        }
+        else if (objectType == "card")
+        {
+            if (cardOnCursor)
+            {
+                holdingCardRightNow = true;
+            }
+            else
+            {
+                holdingCardRightNow = false;
+            }
+
+            if (nameOfObject != "none")
+            {
+                theCardIamHolding = cardType.Name;
+                theCardTypeIamHolding = cardType;
+            }
+            else 
+            {
+                theCardIamHolding = "none";
+            }
+        }
+    }
+    public void LayPrep(string action)
+    {
+        if (action == "prep")
+        {
+            if (!mouseWasReleased)
+            {
+                backup1 = requestedPlacement;
+                backup2 = isThisSpotFree;
+                backup3 = holdingCardRightNow;
+                backup4 = theCardTypeIamHolding;
+            }
+            
+        }
+        if (action == "lay")
+        {
+            mouseWasReleased = true;
+            if (backup1 != "none" && backup2 == true && backup3 == true)
+            {
+                var temp = "none";
+                switch (requestedPlacement)
+                {
+                    case "Card_Holder_Left":
+                        temp = "left";
+                        break;
+                    case "Card_Holder_Right":
+                        temp = "right";
+                        break;
+                    case "Card_Holder_Top":
+                        temp = "top";
+                        break;
+                    case "Card_Holder_Bottom":
+                        temp = "bottom";
+                        break;
+                    default:
+                        Debug.LogError("Card placement failed: A critical error occurred.");
+                        break;
+                }
+
+                LayCards(theCardTypeIamHolding, temp);
+            }
+
+            mouseWasReleased = false;
+        }
+    }
     void Update()
     {
         // 1.: We start the round by displaying or starting an animation for the according pairs.
@@ -126,9 +271,8 @@ public class Main : MonoBehaviour
         // 2.: Making selection of hand-cards avaiable.
         DisplayHandCards();
 
-        // LayCards(); -> Only triggering this when we want to trigger an action
-
-        // HIER NOCH GENAUER DEFINIEREN
+        // LayCards will be triggered as soon as we have everything prepared
+        LayPrep("prep");
 
         // we calculate the outcome for the cards present on the board
         CardRelationshipLogic();
@@ -165,7 +309,6 @@ public class Main : MonoBehaviour
             startNextRound = false;
             continuePairs = true;
             allowedAmountOfHandcards += 1;
-             Debug.LogWarning("Lol");
         }
         else
         {
@@ -236,13 +379,12 @@ public class Main : MonoBehaviour
     }
     IEnumerator CardInstanceDelay(List<CardType> randomSelection)
     {
-        float baseDelay = 0f;
+        float baseDelay = 0.5f;
         foreach (CardType cardType in randomSelection)
         {
             Debug.Log("Handcard: " + cardType.Name);
             GameObject cardPrefab = SelectCardPrefab(cardType);
             yield return new WaitForSeconds(baseDelay);
-            baseDelay = 0.5f;
 
             // handcard slot checking
             if (Current_Handcard1 == null)
