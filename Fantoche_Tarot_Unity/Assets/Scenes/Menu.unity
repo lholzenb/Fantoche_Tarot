@@ -159,7 +159,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 266041204245891470, guid: e727e70e4829145c396e50cd706640f6, type: 3}
       propertyPath: m_text
-      value: Listen to the Voice WIthin
+      value: Listen to the Voice Within
       objectReference: {fileID: 0}
     - target: {fileID: 2727592264423742712, guid: e727e70e4829145c396e50cd706640f6, type: 3}
       propertyPath: m_Name
@@ -1325,7 +1325,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8337995465001947252, guid: 4054a306bfa01497fbd7ef39baeaef86, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8348504615418379209, guid: 4054a306bfa01497fbd7ef39baeaef86, type: 3}
       propertyPath: m_text
@@ -1438,6 +1438,10 @@ PrefabInstance:
     - target: {fileID: 2998050679558673373, guid: 35b4add7ae32c4e94913e8069a168ecb, type: 3}
       propertyPath: m_Name
       value: Tutorial
+      objectReference: {fileID: 0}
+    - target: {fileID: 2998050679558673373, guid: 35b4add7ae32c4e94913e8069a168ecb, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8990653642874536260, guid: 35b4add7ae32c4e94913e8069a168ecb, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
