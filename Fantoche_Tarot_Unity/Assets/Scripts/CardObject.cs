@@ -35,6 +35,7 @@ public class CardObject : MonoBehaviour
     {
         if (deactivateInteractions)
         {
+            spriteRenderer.sortingOrder = 99;
             return;
         }
         HighlightCard(true);
@@ -45,6 +46,7 @@ public class CardObject : MonoBehaviour
     {
         if (deactivateInteractions)
         {
+            spriteRenderer.sortingOrder = 99;
             return;
         }
         HighlightCard(false);
@@ -54,6 +56,7 @@ public class CardObject : MonoBehaviour
     {
         if (deactivateInteractions)
         {
+            spriteRenderer.sortingOrder = 99;
             return;
         }
         if (isHovering)
@@ -64,14 +67,18 @@ public class CardObject : MonoBehaviour
     }
     void OnMouseUp()
     {
-        if (deactivateInteractions)
-        {
-            return;
-        }
+        // this is game-breaking if not placed here!
         mechanicsHolder.GetComponent<Main>().LayPrep("lay");
-        spriteRenderer.color = Color.white;
         isHolding = false;
         mechanicsHolder.GetComponent<Main>().StatusUpdate("none", "card");
+
+        if (deactivateInteractions)
+        {   
+            spriteRenderer.sortingOrder = 99;
+            return;
+        }
+
+        spriteRenderer.color = Color.white;
         transform.position = originalPosition;
         HighlightCard(false);
     }
@@ -80,6 +87,7 @@ public class CardObject : MonoBehaviour
     {
         if (deactivateInteractions)
         {
+            spriteRenderer.sortingOrder = 99;
             return;
         }
         Vector3 mousePosition = Input.mousePosition;
@@ -112,9 +120,47 @@ public class CardObject : MonoBehaviour
             spriteRenderer.sortingOrder -= 1;
         }
     }
-
-    public void DeactivateInteractions()
+    public void DeactivateInteractions(bool yes = false, bool activate = false)
     {
+        if (activate)
+        {
+            deactivateInteractions = false;
+            StartCoroutine(waitForRenderer("white"));
+            return;
+        }
         deactivateInteractions = true;
+        if (yes)
+        {
+            StartCoroutine(waitForRenderer("grey"));
+        }
+    }
+    IEnumerator waitForRenderer(string color)
+    {
+        float duration = 0.33f;
+        float elapsedTime = 0f;
+        yield return new WaitForSeconds(0.25f);
+
+        Color startColor = spriteRenderer.color;
+        Color targetColor;
+        if (color == "grey")
+        {
+            targetColor = new Color(0.5f, 0.5f, 0.5f, 1f);
+        }
+        else
+        {
+            targetColor = new Color(1f, 1f, 1f, 1f);
+        }
+        
+        yield return new WaitForSeconds(0.05f);
+
+        while (elapsedTime < duration)
+        {
+
+            spriteRenderer.color = Color.Lerp(startColor, targetColor, elapsedTime / duration);
+
+            elapsedTime += Time.deltaTime;
+            yield return null;
+        }
+        spriteRenderer.color = targetColor;
     }
 }

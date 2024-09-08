@@ -13,7 +13,9 @@ public class Main : MonoBehaviour
     public int pairNumber;
     private bool continuePairs = false;
     private bool startNextRound = false;
+     private bool finalPhaseNotYetRun;
     public int currentOutcomePosNeg;
+    public int finalScore;
     public int allowedAmountOfHandcards;
 
     [Space(20)]
@@ -70,18 +72,36 @@ public class Main : MonoBehaviour
     private UnityEngine.Vector2 handcard3Pos;
 
     [Space(20)]
+    public GameObject JokerHolder;
+
+    [Space(20)]
     [Header("Card Types")]
     private CardType red_is_fire;
     private CardType yellow_is_earth;
     private CardType green_is_air;
     private CardType blue_is_water;
-    private CardType joker_card;
+    public CardType joker_card;
+
+    [Space(20)]
+    [Header("Reactions")]
+    public GameObject reaction_hearts_left;
+    public GameObject reaction_hearts_right;
+    public GameObject reaction_hearts_top;
+    public GameObject reaction_hearts_bottom;
+
+    [Space(20)]
+    public GameObject reaction_thunder_left;
+    public GameObject reaction_thunder_right;
+    public GameObject reaction_thunder_top;
+    public GameObject reaction_thunder_bottom;
 
     void Start()
     {
         // game starts & checking if setup correct & loads first pair
         allowedAmountOfHandcards = 3;
         startNextRound = true;
+        finalPhaseNotYetRun = true;
+        JokerHolder.GetComponent<CardObject>().DeactivateInteractions(true, false);
         if (CardLeftHolder == null || CardRightHolder == null || CardTopHolder == null || CardBottomHolder == null)
         {
             Debug.LogError("CARD SPOTS NOT ASSIGNED!");
@@ -129,7 +149,7 @@ public class Main : MonoBehaviour
         Debug.Log(blue_is_water.Name + ": " + blue_is_water.Description);
 
         // defining card types - other cards
-        joker_card = new CardType("Joker","Joker card resolves a truce by being laid upside down (negative) or in the correct position (positive).","none","none");
+        // joker_card = new CardType("Joker","Joker card resolves a truce by being laid upside down (negative) or in the correct position (positive).","none","none");
     }
 
     // tracking card movements
@@ -281,6 +301,19 @@ public class Main : MonoBehaviour
             }
             else if (requestedPlacement != null && isThisSpotFree == true && holdingCardRightNow == false)
             {
+                
+                if (Current_Handcard1 != null)
+                {
+                    Current_Handcard1.GetComponent<CardObject>().DeactivateInteractions(false, true);
+                }
+                if (Current_Handcard2 != null)
+                {
+                    Current_Handcard2.GetComponent<CardObject>().DeactivateInteractions(false, true);
+                }
+                if (Current_Handcard3 != null)
+                {
+                    Current_Handcard3.GetComponent<CardObject>().DeactivateInteractions(false, true);
+                }
                 RandomizeCard(temp, true, 1);
                 Debug.Log("requested random card on: " + temp);
             }
@@ -293,12 +326,11 @@ public class Main : MonoBehaviour
         DisplayPairs();
         // 2.: Making selection of hand-cards avaiable.
         DisplayHandCards();
-
-        // LayCards will be triggered as soon as we have everything prepared
+        // 3.: LayCards will be triggered as soon as we have everything prepared.
         LayPrep("prep");
-
-        // we calculate the outcome for the cards present on the board
+        // 4.: We calculate the outcome for the cards present on the board.
         CardRelationshipLogic();
+        // 5.: We check, if the final phase may begin and trigger it.
         FinalPhase();
     }
     
@@ -379,6 +411,8 @@ public class Main : MonoBehaviour
         {
             CardType randomCard = possibleCards[UnityEngine.Random.Range(0, possibleCards.Count)];
             LayCards(randomCard, requestedSpot);
+            backup4 = null;
+            theCardTypeIamHolding = null;
         }
         else
         {
@@ -415,18 +449,21 @@ public class Main : MonoBehaviour
             {
                 Current_Handcard1 = Instantiate(cardPrefab);
                 Current_Handcard1.AddComponent<CardObject>().SetCardType(cardType);
+                Current_Handcard1.GetComponent<CardObject>().DeactivateInteractions(true);
                 Current_Handcard1.transform.position = new UnityEngine.Vector2(handcard1Pos.x, handcard1Pos.y);
             }
             else if (Current_Handcard2 == null)
             {
                 Current_Handcard2 = Instantiate(cardPrefab);
                 Current_Handcard2.AddComponent<CardObject>().SetCardType(cardType);
+                Current_Handcard2.GetComponent<CardObject>().DeactivateInteractions(true);
                 Current_Handcard2.transform.position = new UnityEngine.Vector2(handcard2Pos.x, handcard2Pos.y);
             }
             else if (Current_Handcard3 == null)
             {
                 Current_Handcard3 = Instantiate(cardPrefab);
                 Current_Handcard3.AddComponent<CardObject>().SetCardType(cardType);
+                Current_Handcard3.GetComponent<CardObject>().DeactivateInteractions(true);
                 Current_Handcard3.transform.position = new UnityEngine.Vector2(handcard3Pos.x, handcard3Pos.y);
             }
         }
@@ -459,8 +496,6 @@ public class Main : MonoBehaviour
         // assigning card type to slots
         if (Current_CardLeft == null && requestedSpot == "left")
         {
-            // -> set the respective interactible to "disabled"
-
             // we assign the type of the card chosen
             Current_CardLeft = Instantiate(cardPrefab);
             Current_CardLeft.AddComponent<CardObject>().SetCardType(cardType);
@@ -471,8 +506,6 @@ public class Main : MonoBehaviour
         }
         else if (Current_CardRight == null && requestedSpot == "right")
         {
-            // -> set the respective interactible to "disabled"
-
             // we assign the type of the card chosen
             Current_CardRight = Instantiate(cardPrefab);
             Current_CardRight.AddComponent<CardObject>().SetCardType(cardType);
@@ -483,8 +516,6 @@ public class Main : MonoBehaviour
         }
         else if (Current_CardTop == null && requestedSpot == "top")
         {
-            // -> set the respective interactible to "disabled"
-
             // we assign the type of the card chosen
             Current_CardTop = Instantiate(cardPrefab);
             Current_CardTop.AddComponent<CardObject>().SetCardType(cardType);
@@ -495,8 +526,6 @@ public class Main : MonoBehaviour
         }
         else if (Current_CardBottom == null && requestedSpot == "bottom")
         {
-            // -> set the respective interactible to "disabled"
-
             // we assign the type of the card chosen
             Current_CardBottom = Instantiate(cardPrefab);
             Current_CardBottom.AddComponent<CardObject>().SetCardType(cardType);
@@ -523,14 +552,20 @@ public class Main : MonoBehaviour
             if (CardMathematicalSummary("left") >= 1)
             {
                 currentOutcomeTemp += 1;
+                reaction_hearts_left.SetActive(true);
+                reaction_thunder_left.SetActive(false);
             }
             else if (CardMathematicalSummary("left") <= -1)
             {
                 currentOutcomeTemp -= 1;
+                reaction_hearts_left.SetActive(false);
+                reaction_thunder_left.SetActive(true);
             }
             else 
             {
                 // needing some sort of visual representation of neutral value
+                reaction_hearts_left.SetActive(false);
+                reaction_thunder_left.SetActive(false);
             }
         }
         if (Current_CardRight != null)
@@ -538,14 +573,20 @@ public class Main : MonoBehaviour
             if (CardMathematicalSummary("right") >= 1)
             {
                 currentOutcomeTemp += 1;
+                reaction_hearts_right.SetActive(true);
+                reaction_thunder_right.SetActive(false);
             }
             else if (CardMathematicalSummary("right") <= -1)
             {
                 currentOutcomeTemp -= 1;
+                reaction_hearts_right.SetActive(false);
+                reaction_thunder_right.SetActive(true);
             }
             else 
             {
                 // needing some sort of visual representation of neutral value
+                reaction_hearts_right.SetActive(false);
+                reaction_thunder_right.SetActive(false);
             }
         }
         if (Current_CardTop != null)
@@ -553,14 +594,20 @@ public class Main : MonoBehaviour
             if (CardMathematicalSummary("top") >= 1)
             {
                 currentOutcomeTemp += 1;
+                reaction_hearts_top.SetActive(true);
+                reaction_thunder_top.SetActive(false);
             }
             else if (CardMathematicalSummary("top") <= -1)
             {
                 currentOutcomeTemp -= 1;
+                reaction_hearts_top.SetActive(false);
+                reaction_thunder_top.SetActive(true);
             }
             else 
             {
                 // needing some sort of visual representation of neutral value
+                reaction_hearts_top.SetActive(false);
+                reaction_thunder_top.SetActive(false);
             }
         }
         if (Current_CardBottom != null)
@@ -568,14 +615,20 @@ public class Main : MonoBehaviour
             if (CardMathematicalSummary("bottom") >= 1)
             {
                 currentOutcomeTemp += 1;
+                reaction_hearts_bottom.SetActive(true);
+                reaction_thunder_bottom.SetActive(false);
             }
             else if (CardMathematicalSummary("bottom") <= -1)
             {
                 currentOutcomeTemp -= 1;
+                reaction_hearts_bottom.SetActive(false);
+                reaction_thunder_bottom.SetActive(true);
             }
             else 
             {
                 // needing some sort of visual representation of neutral value
+                reaction_hearts_bottom.SetActive(false);
+                reaction_thunder_bottom.SetActive(false);
             }
         }      
         currentOutcomePosNeg = currentOutcomeTemp;
@@ -649,8 +702,59 @@ public class Main : MonoBehaviour
 
     void FinalPhase()
     {
-        // we have an outcome, what do we do with it? - And when do we reset it for the next couple?
-        // startNextRound = true; NOT YET
+        if 
+        (
+        Current_CardLeft != null &&
+        Current_CardRight != null &&
+        Current_CardTop != null &&
+        Current_CardBottom != null
+        )
+        {
+            // making sure this does not run more than once per couple
+            if (finalPhaseNotYetRun)
+            {
+                finalPhaseNotYetRun = false;
+            }
+            else
+            {
+                return;
+            }
+
+            finalScore = currentOutcomePosNeg;
+            // deactivate further interactions with the game (except for joker if neutral outcome)
+            if (Current_Handcard1 != null)
+            {
+                Current_Handcard1.GetComponent<CardObject>().DeactivateInteractions(false, false);
+            }
+            if (Current_Handcard2 != null)
+            {
+                Current_Handcard2.GetComponent<CardObject>().DeactivateInteractions(false, false);
+            }
+            if (Current_Handcard3 != null)
+            {
+                Current_Handcard3.GetComponent<CardObject>().DeactivateInteractions(false, false);
+            }
+        }
+        else
+        {
+            return;
+        }
+
+        // joker time for neutral results -> WE NEED A ILLUSTRATION!
+        if (finalScore == 0)
+        {
+            JokerHolder.GetComponent<CardObject>().DeactivateInteractions(false, true);
+        }
+        
+        // coroutine to start animations and finish the round & prepare the next one
+            // startNextRound = true; NOT YET
+            // show a banner for the results?
+            // nullify everything that has to be empty for the next round!
+            // disable interaction locks
+            // close curtains and reopen?
+
+            // wieder deaktivieren?
+            // JokerHolder.GetComponent<CardObject>().DeactivateInteractions(true, false);
     }
 }
 
