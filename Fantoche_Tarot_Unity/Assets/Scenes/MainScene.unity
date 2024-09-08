@@ -485,6 +485,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: Dialogue
       objectReference: {fileID: 0}
+    - target: {fileID: 4345170124000109822, guid: 5e19de1c911cf4e6dba68fd16037bd9f, type: 3}
+      propertyPath: main
+      value: 
+      objectReference: {fileID: 490202648}
+    - target: {fileID: 5831202615210261712, guid: 5e19de1c911cf4e6dba68fd16037bd9f, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 7505334437322901306, guid: 5e19de1c911cf4e6dba68fd16037bd9f, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -566,7 +574,8 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
-    m_RemovedGameObjects: []
+    m_RemovedGameObjects:
+    - {fileID: 3012464039918708282, guid: 5e19de1c911cf4e6dba68fd16037bd9f, type: 3}
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5e19de1c911cf4e6dba68fd16037bd9f, type: 3}
@@ -1276,6 +1285,7 @@ MonoBehaviour:
   isThisSpotFree: 0
   holdingCardRightNow: 0
   theCardIamHolding: none
+  dialogueManager: {fileID: 1435860419}
   Current_CardLeft: {fileID: 0}
   Current_CardRight: {fileID: 0}
   Current_CardTop: {fileID: 0}
@@ -2949,6 +2959,17 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1.72, y: 3.04}
   m_EdgeRadius: 0
+--- !u!114 &1435860419 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4345170124000109822, guid: 5e19de1c911cf4e6dba68fd16037bd9f, type: 3}
+  m_PrefabInstance: {fileID: 169437629}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b98464034eaaf4f989c4eeb677f42b6d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1541364069
 GameObject:
   m_ObjectHideFlags: 0

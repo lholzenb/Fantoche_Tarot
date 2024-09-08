@@ -32,6 +32,9 @@ public class Main : MonoBehaviour
     CardType backup4;
 
     [Space(20)]
+    public DialogueManager dialogueManager;
+
+    [Space(20)]
     public GameObject Current_CardLeft;
     public GameObject Current_CardRight;
     public GameObject Current_CardTop;
@@ -721,6 +724,8 @@ public class Main : MonoBehaviour
             }
 
             finalScore = currentOutcomePosNeg;
+            dialogueManager.UpdateScore();
+
             // deactivate further interactions with the game (except for joker if neutral outcome)
             if (Current_Handcard1 != null)
             {
