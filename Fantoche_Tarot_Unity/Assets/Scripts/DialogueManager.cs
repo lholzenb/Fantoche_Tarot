@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using UnityEngine.SceneManagement;
 
 public class DialogueManager : MonoBehaviour
 {
@@ -13,6 +14,9 @@ public class DialogueManager : MonoBehaviour
     public int scoreThreshold = 0;
     private int playerScore;
     public Animator animatorDialogue;
+
+
+    public Animator animatorCurtain;
 
     // List to hold good responses
     public List<string> goodResponses = new List<string>
@@ -103,5 +107,12 @@ public class DialogueManager : MonoBehaviour
     public void CloseDialogue()
     {
         animatorDialogue.SetBool("DialogueOpen", false);
+        animatorCurtain.SetBool("CurtainWillClose", true);
+        Invoke("RestartScene", 1);
+    }
+
+    private void RestartScene()
+    {
+        SceneManager.LoadScene(1);
     }
 }
