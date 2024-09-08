@@ -742,9 +742,6 @@ public class Main : MonoBehaviour
                 return;
             }
 
-            finalScore = currentOutcomePosNeg;
-            dialogueManager.UpdateScore();
-
             // deactivate further interactions with the game (except for joker if neutral outcome)
             if (Current_Handcard1 != null)
             {
@@ -765,10 +762,14 @@ public class Main : MonoBehaviour
         }
 
         // joker time for neutral results -> WE NEED A ILLUSTRATION!
-        if (finalScore == 0)
+        if (currentOutcomePosNeg == 0)
         {
+            Debug.Log("time for joker");
             JokerHolder.GetComponent<CardObject>().DeactivateInteractions(false, true);
         }
+        
+        // for presentation!! so that we can click the joker
+        StartCoroutine(ExecuteAfterDelay(3.0f));
         
         // coroutine to start animations and finish the round & prepare the next one
             // startNextRound = true; NOT YET
@@ -780,8 +781,23 @@ public class Main : MonoBehaviour
             // wieder deaktivieren?
             // JokerHolder.GetComponent<CardObject>().DeactivateInteractions(true, false);
     }
+    IEnumerator ExecuteAfterDelay(float delayInSeconds)
+    {
+        Debug.Log("Coroutine started. Waiting for " + delayInSeconds + " seconds...");
+        
+        // Wartet die angegebene Zeit
+        yield return new WaitForSeconds(delayInSeconds);
+        
+        // Code, der nach dem Delay ausgeführt wird
+        Debug.Log("3 seconds passed, now executing the rest of the code.");
+        
+        // Füge hier deinen Code hinzu, der nach der Verzögerung ausgeführt werden soll
+        finalScore = currentOutcomePosNeg;
+        dialogueManager.UpdateScore();
+    }
 }
-
+    
+        
 // second class to easify card types
 public class CardType
 {

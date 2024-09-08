@@ -799,6 +799,30 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7108834509462873016, guid: 9586736d648d54bbb9498e556cd39195, type: 3}
+      propertyPath: m_LayerOverridePriority
+      value: 99
+      objectReference: {fileID: 0}
+    - target: {fileID: 8062695319457728213, guid: 9586736d648d54bbb9498e556cd39195, type: 3}
+      propertyPath: m_Size.x
+      value: 1920
+      objectReference: {fileID: 0}
+    - target: {fileID: 8062695319457728213, guid: 9586736d648d54bbb9498e556cd39195, type: 3}
+      propertyPath: m_Size.y
+      value: 1080
+      objectReference: {fileID: 0}
+    - target: {fileID: 8062695319457728213, guid: 9586736d648d54bbb9498e556cd39195, type: 3}
+      propertyPath: m_ExcludeLayers.m_Bits
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8062695319457728213, guid: 9586736d648d54bbb9498e556cd39195, type: 3}
+      propertyPath: m_IncludeLayers.m_Bits
+      value: 4294967295
+      objectReference: {fileID: 0}
+    - target: {fileID: 8062695319457728213, guid: 9586736d648d54bbb9498e556cd39195, type: 3}
+      propertyPath: m_LayerOverridePriority
+      value: 20
+      objectReference: {fileID: 0}
     - target: {fileID: 8247608464920867047, guid: 9586736d648d54bbb9498e556cd39195, type: 3}
       propertyPath: m_Name
       value: PauseMenu Variant
@@ -1278,6 +1302,7 @@ GameObject:
   m_Component:
   - component: {fileID: 490202649}
   - component: {fileID: 490202648}
+  - component: {fileID: 490202650}
   m_Layer: 0
   m_Name: Mechanics_Holder
   m_TagString: Untagged
@@ -1352,6 +1377,19 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &490202650
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 490202647}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7da62da9ac20e624aa8ba059d82dd49f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  menu: {fileID: 2130075304}
 --- !u!1 &519420028
 GameObject:
   m_ObjectHideFlags: 0
@@ -3865,6 +3903,11 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2074204124}
   m_CullTransparentMesh: 1
+--- !u!1 &2130075304 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3919835141917244796, guid: 9586736d648d54bbb9498e556cd39195, type: 3}
+  m_PrefabInstance: {fileID: 191826111}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &3836696847494802149
 PrefabInstance:
   m_ObjectHideFlags: 0
