@@ -556,6 +556,7 @@ public class Main : MonoBehaviour
         {
             if (CardMathematicalSummary("left") >= 1)
             {
+                Debug.Log("hearts");
                 currentOutcomeTemp += 1;
                 reaction_hearts_left.SetActive(true);
                 reaction_thunder_left.SetActive(false);
@@ -577,6 +578,7 @@ public class Main : MonoBehaviour
         {
             if (CardMathematicalSummary("right") >= 1)
             {
+                Debug.Log("hearts");
                 currentOutcomeTemp += 1;
                 reaction_hearts_right.SetActive(true);
                 reaction_thunder_right.SetActive(false);
@@ -598,6 +600,7 @@ public class Main : MonoBehaviour
         {
             if (CardMathematicalSummary("top") >= 1)
             {
+                Debug.Log("hearts");
                 currentOutcomeTemp += 1;
                 reaction_hearts_top.SetActive(true);
                 reaction_thunder_top.SetActive(false);
@@ -619,6 +622,7 @@ public class Main : MonoBehaviour
         {
             if (CardMathematicalSummary("bottom") >= 1)
             {
+                Debug.Log("hearts");
                 currentOutcomeTemp += 1;
                 reaction_hearts_bottom.SetActive(true);
                 reaction_thunder_bottom.SetActive(false);
@@ -647,6 +651,7 @@ public class Main : MonoBehaviour
             temp += CardCompareWith(Current_CardTop, Current_CardLeft);
             temp += CardCompareWith(Current_CardBottom, Current_CardLeft);
             temp += CardCompareWith(Current_CardRight, Current_CardLeft);
+            Debug.Log("CardMathematicalSummary (left): " + temp);
             return temp;
         }
         else if (position == "right")
@@ -656,6 +661,7 @@ public class Main : MonoBehaviour
             temp += CardCompareWith(Current_CardTop, Current_CardRight);
             temp += CardCompareWith(Current_CardBottom, Current_CardRight);
             temp += CardCompareWith(Current_CardLeft, Current_CardRight);
+             Debug.Log("CardMathematicalSummary (right): " + temp);
             return temp;
         }
         else if (position == "top")
@@ -665,6 +671,7 @@ public class Main : MonoBehaviour
             temp += CardCompareWith(Current_CardBottom, Current_CardTop);
             temp += CardCompareWith(Current_CardLeft, Current_CardTop);
             temp += CardCompareWith(Current_CardRight, Current_CardTop);
+            Debug.Log("CardMathematicalSummary (top): " + temp);
             return temp;
         }
         else if (position == "bottom")
@@ -674,6 +681,7 @@ public class Main : MonoBehaviour
             temp += CardCompareWith(Current_CardTop, Current_CardBottom);
             temp += CardCompareWith(Current_CardLeft, Current_CardBottom);
             temp += CardCompareWith(Current_CardRight, Current_CardBottom);
+            Debug.Log("CardMathematicalSummary (bottom): " + temp);
             return temp;
         }
         else 
@@ -684,20 +692,31 @@ public class Main : MonoBehaviour
     }
     int CardCompareWith(GameObject ToCompareWith, GameObject myCard)
     {
+        var myCardObject = myCard.GetComponent<CardObject>();
+        string myWeakness = myCardObject.cardType.WeaknessAgainst;
+        string myStrenght = myCardObject.cardType.StrenghtAgainst;
+
+        Debug.Log(ToCompareWith + "&");
+        Debug.Log(myCardObject + " " + myWeakness + " " + myStrenght + " &");
         if (ToCompareWith == null)
         {
             return 0;
         }
-        var myCardObject = myCard.GetComponent<CardObject>();
-        string myWeakness = myCardObject.cardType.WeaknessAgainst;
-        string myStrenght = myCardObject.cardType.StrenghtAgainst;
-        if (myWeakness == ToCompareWith.GetComponent<CardObject>().cardType.StrenghtAgainst)
+        
+        Debug.Log("***** This card: " + myCardObject + " is weak against " + myWeakness + " and strong against " + myStrenght + "\n" +
+                  "***** Other card: " + ToCompareWith + " is weak against " + ToCompareWith.GetComponent<CardObject>().cardType.WeaknessAgainst + " and strong against " + ToCompareWith.GetComponent<CardObject>().cardType.StrenghtAgainst + "\n" +
+                  "***** Result: " + "This card is strong against other card: " + (myStrenght == ToCompareWith.GetComponent<CardObject>().cardType.WeaknessAgainst) + "\n" +
+                  "***** Result: " + "This card is weak against other card: " + (myWeakness == ToCompareWith.GetComponent<CardObject>().cardType.StrenghtAgainst) + "\n");
+
+        if (myStrenght == ToCompareWith.GetComponent<CardObject>().cardType.Type)
         {
-            return -1;
-        }
-        else if (myStrenght == ToCompareWith.GetComponent<CardObject>().cardType.WeaknessAgainst)
-        {
+            Debug.Log("Positive Return " + myCardObject + " strenght: " + myStrenght + " weakness: " + myWeakness);
             return 1;
+        }
+        else if (myWeakness == ToCompareWith.GetComponent<CardObject>().cardType.Type)
+        {
+            Debug.Log("Negative Return " + myCardObject + " strenght: " + myStrenght + " weakness: " + myWeakness);
+            return -1;
         }
         else
         {
@@ -785,6 +804,7 @@ public class CardType
     public string Description {get; set;}
     public string WeaknessAgainst {get; set;}
     public string StrenghtAgainst {get; set;}
+    public string Type {get; set;}
 
     // setting values and getting values (constructor)
     public CardType(string name, string description, string weaknessAgainst, string strenghAgainst)
@@ -793,5 +813,20 @@ public class CardType
         Description = description;
         WeaknessAgainst = weaknessAgainst;
         StrenghtAgainst = strenghAgainst;
+        switch (name)
+        {
+            case "Blue":
+                Type = "blue_is_water";
+                break;
+            case "Green":
+                 Type = "green_is_air";
+                break;
+            case "Red":
+                Type = "red_is_fire";
+                break;
+            case "Yellow":
+                Type = "yellow_is_earth";
+                break;
+        }
     }
 }
