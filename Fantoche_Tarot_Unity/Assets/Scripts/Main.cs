@@ -6,6 +6,7 @@ using System.Numerics;
 using Unity.VisualScripting;
 using Unity.VisualScripting.FullSerializer;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class Main : MonoBehaviour
 {
@@ -33,6 +34,7 @@ public class Main : MonoBehaviour
 
     [Space(20)]
     public DialogueManager dialogueManager;
+    public Animator animatorCurtain;
 
     [Space(20)]
     public GameObject Current_CardLeft;
@@ -739,6 +741,8 @@ public class Main : MonoBehaviour
             {
                 Current_Handcard3.GetComponent<CardObject>().DeactivateInteractions(false, false);
             }
+
+            Invoke("EndGame", 10);
         }
         else
         {
@@ -760,6 +764,17 @@ public class Main : MonoBehaviour
 
             // wieder deaktivieren?
             // JokerHolder.GetComponent<CardObject>().DeactivateInteractions(true, false);
+    }
+
+    private void EndGame()
+    {
+        animatorCurtain.SetBool("CurtainWillClose", true);
+        Invoke("RestartScene", 1);
+    }
+
+    private void RestartScene()
+    {
+        SceneManager.LoadScene(1);
     }
 }
 

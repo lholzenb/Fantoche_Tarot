@@ -1286,6 +1286,7 @@ MonoBehaviour:
   holdingCardRightNow: 0
   theCardIamHolding: none
   dialogueManager: {fileID: 1435860419}
+  animatorCurtain: {fileID: 2074204126}
   Current_CardLeft: {fileID: 0}
   Current_CardRight: {fileID: 0}
   Current_CardTop: {fileID: 0}
@@ -3793,7 +3794,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &2074204125
 RectTransform:
   m_ObjectHideFlags: 0
