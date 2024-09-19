@@ -158,7 +158,7 @@ MonoBehaviour:
   creditsScreen: {fileID: 0}
   tutorialScreen: {fileID: 195451769}
   pauseScreen: {fileID: 191826112}
-  curtains: {fileID: 0}
+  curtains: {fileID: 2074204126}
 --- !u!114 &44692224
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -188,10 +188,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0cd44c1031e13a943bb63640046fad76, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_UiScaleMode: 0
+  m_UiScaleMode: 1
   m_ReferencePixelsPerUnit: 100
   m_ScaleFactor: 1
-  m_ReferenceResolution: {x: 800, y: 600}
+  m_ReferenceResolution: {x: 1920, y: 1080}
   m_ScreenMatchMode: 0
   m_MatchWidthOrHeight: 0
   m_PhysicalUnit: 3
@@ -506,12 +506,28 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 490202648}
     - target: {fileID: 4345170124000109822, guid: 5e19de1c911cf4e6dba68fd16037bd9f, type: 3}
+      propertyPath: coupleMad
+      value: 
+      objectReference: {fileID: 1095251486}
+    - target: {fileID: 4345170124000109822, guid: 5e19de1c911cf4e6dba68fd16037bd9f, type: 3}
+      propertyPath: coupleHappy
+      value: 
+      objectReference: {fileID: 781690780}
+    - target: {fileID: 4345170124000109822, guid: 5e19de1c911cf4e6dba68fd16037bd9f, type: 3}
+      propertyPath: coupleNeutral
+      value: 
+      objectReference: {fileID: 1803490729}
+    - target: {fileID: 4345170124000109822, guid: 5e19de1c911cf4e6dba68fd16037bd9f, type: 3}
       propertyPath: animatorCurtain
       value: 
       objectReference: {fileID: 2074204126}
     - target: {fileID: 5831202615210261712, guid: 5e19de1c911cf4e6dba68fd16037bd9f, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7202658624100711951, guid: 5e19de1c911cf4e6dba68fd16037bd9f, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -1000
       objectReference: {fileID: 0}
     - target: {fileID: 7505334437322901306, guid: 5e19de1c911cf4e6dba68fd16037bd9f, type: 3}
       propertyPath: m_Pivot.x
@@ -802,6 +818,10 @@ PrefabInstance:
     - target: {fileID: 7108834509462873016, guid: 9586736d648d54bbb9498e556cd39195, type: 3}
       propertyPath: m_LayerOverridePriority
       value: 99
+      objectReference: {fileID: 0}
+    - target: {fileID: 7636430506014204989, guid: 9586736d648d54bbb9498e556cd39195, type: 3}
+      propertyPath: m_Color.a
+      value: 0.9411765
       objectReference: {fileID: 0}
     - target: {fileID: 8062695319457728213, guid: 9586736d648d54bbb9498e556cd39195, type: 3}
       propertyPath: m_Size.x
@@ -1339,6 +1359,7 @@ MonoBehaviour:
   Current_Handcard2: {fileID: 0}
   Current_Handcard3: {fileID: 0}
   Pairs:
+  - {fileID: 1095251486}
   - {fileID: 1803490729}
   - {fileID: 781690780}
   TimePassedUntilHandcardsAreRevealed: 1.5
@@ -2242,7 +2263,7 @@ GameObject:
   - component: {fileID: 781690782}
   - component: {fileID: 781690781}
   m_Layer: 0
-  m_Name: Pair_PlaceHolder (2)
+  m_Name: Pair_Happy
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2569,7 +2590,7 @@ GameObject:
   - component: {fileID: 1095251488}
   - component: {fileID: 1095251487}
   m_Layer: 0
-  m_Name: Pair_PlaceHolder (3)
+  m_Name: Pair_Mad
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3366,7 +3387,7 @@ GameObject:
   - component: {fileID: 1803490731}
   - component: {fileID: 1803490730}
   m_Layer: 0
-  m_Name: Pair_PlaceHolder (1)
+  m_Name: Pair_Neutral
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

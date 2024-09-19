@@ -100,6 +100,8 @@ public class Main : MonoBehaviour
 
     void Start()
     {
+        Pairs[1].SetActive(true);
+
         // game starts & checking if setup correct & loads first pair
         allowedAmountOfHandcards = 3;
         startNextRound = true;
@@ -326,7 +328,7 @@ public class Main : MonoBehaviour
     void Update()
     {
         // 1.: We start the round by displaying or starting an animation for the according pairs.
-        DisplayPairs();
+        //DisplayPairs();
         // 2.: Making selection of hand-cards avaiable.
         DisplayHandCards();
         // 3.: LayCards will be triggered as soon as we have everything prepared.
@@ -337,28 +339,28 @@ public class Main : MonoBehaviour
         FinalPhase();
     }
     
-    void DisplayPairs()
-    {
-        if (continuePairs == true)
-        {
-            continuePairs = false;
-            pairNumber += 1;
+    //void DisplayPairs()
+    //{
+    //    if (continuePairs == true)
+    //    {
+    //        continuePairs = false;
+    //        pairNumber += 1;
 
-            // this only runs once for each according pairs
-            // you can trigger an animation and/or couroutine for displaying a pair down below (fancy slide-in perhaps?)
+    //        // this only runs once for each according pairs
+    //        // you can trigger an animation and/or couroutine for displaying a pair down below (fancy slide-in perhaps?)
 
-            if (Pairs.Count > 0 && pairNumber < Pairs.Count) // checking if not emty or out of range
-            {
-                /*
-                // For animators & in-engine polishing:
-                // Displaying the correct pair, arrays start at 0.
-                -> Or do this in a coroutine and make a new array for animations, it's up to you!
-                */
-                Pairs[(pairNumber-1)].SetActive(true);
-                Debug.Log("Pair activated: " + Pairs[(pairNumber-1)].name);
-            }
-        }
-    }
+    //        if (Pairs.Count > 0 && pairNumber < Pairs.Count) // checking if not emty or out of range
+    //        {
+    //            /*
+    //            // For animators & in-engine polishing:
+    //            // Displaying the correct pair, arrays start at 0.
+    //            -> Or do this in a coroutine and make a new array for animations, it's up to you!
+    //            */
+    //            Pairs[(pairNumber-1)].SetActive(true);
+    //            Debug.Log("Pair activated: " + Pairs[(pairNumber-1)].name);
+    //        }
+    //    }
+    //}
     void DisplayHandCards()
     {
         // every round we display max. 3 cards - every round we get +1 card
@@ -794,6 +796,19 @@ public class Main : MonoBehaviour
         // Füge hier deinen Code hinzu, der nach der Verzögerung ausgeführt werden soll
         finalScore = currentOutcomePosNeg;
         dialogueManager.UpdateScore();
+
+        // Update Couples Sprite
+        if (currentOutcomePosNeg >= 0)
+        {
+            Pairs[1].SetActive(false);
+            Pairs[2].SetActive(true);
+        }
+        else
+        {
+            Pairs[1].SetActive(false);
+            Pairs[0].SetActive(true);
+        }
+
     }
 }
     
