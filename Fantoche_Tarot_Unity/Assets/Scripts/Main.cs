@@ -98,6 +98,11 @@ public class Main : MonoBehaviour
     public GameObject reaction_thunder_top;
     public GameObject reaction_thunder_bottom;
 
+    [Space(20)]
+    [Header("Card Types")]
+    public GameObject PauseMenuObject;
+    private bool theMenuHasBeenOpenedBefore = false;
+    List<Collider2D> collidersSnapshot = new List<Collider2D>();
     void Start()
     {
         Pairs[1].SetActive(true);
@@ -327,8 +332,10 @@ public class Main : MonoBehaviour
     }
     void Update()
     {
-        // 1.: We start the round by displaying or starting an animation for the according pairs.
+        // 1.: We start the round by displaying or starting an animation for the according pairs
+        // Also: We start checking if the pause menu was opened.
         //DisplayPairs();
+        PauseMenuChecker();
         // 2.: Making selection of hand-cards avaiable.
         DisplayHandCards();
         // 3.: LayCards will be triggered as soon as we have everything prepared.
@@ -361,6 +368,52 @@ public class Main : MonoBehaviour
     //        }
     //    }
     //}
+
+    void PauseMenuChecker()
+    {
+        // simple menu check so that we don't save arrays after menu opening and this does not clock up our ressources
+        if (PauseMenuObject.activeSelf == true)
+        {
+            if (theMenuHasBeenOpenedBefore)
+            {
+                return;
+            }
+            theMenuHasBeenOpenedBefore = true;
+            Debug.LogWarning("Pause ccreen has been opened.");
+
+            // handling all active and relevant colliders
+            Collider2D[] allColliders = FindObjectsOfType<Collider2D>(); // temporary to get ALL colliders
+            collidersSnapshot = new List<Collider2D>(); // liste to exclude
+            foreach (Collider2D collider in allColliders)
+            {
+                if (!collider.gameObject.activeInHierarchy || collider.gameObject.transform.IsChildOf(PauseMenuObject.transform))
+                {
+                    Debug.Log("All *active* colliders lenght: " + allColliders.Length + " - Inactive colliders should not appear, due to how unity handles *FindObjectsOfType*.");
+                    if (collider.gameObject.transform.IsChildOf(PauseMenuObject.transform))
+                    {
+                        Debug.Log("Found menu collider: " + collider.gameObject.transform.name);
+                    }
+                    continue; // skip this collider
+                }
+                collidersSnapshot.Add(collider);
+            }
+            Debug.Log("Deactivating colliders when paused - count: " + collidersSnapshot.Count);
+            foreach (Collider2D collider in collidersSnapshot)
+            {
+                collider.enabled = false;
+            }
+        }
+        else
+        {
+            foreach (Collider2D collider in collidersSnapshot)
+            {
+                 collider.enabled = true;
+            }
+            collidersSnapshot.Clear();
+            theMenuHasBeenOpenedBefore = false;
+        }
+    }
+
     void DisplayHandCards()
     {
         // every round we display max. 3 cards - every round we get +1 card

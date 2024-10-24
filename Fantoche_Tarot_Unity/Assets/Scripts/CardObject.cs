@@ -103,6 +103,10 @@ public class CardObject : MonoBehaviour
 
     void Update()
     {
+        if (mechanicsHolder.GetComponent<Main>().PauseMenuObject.activeSelf == true)
+        {
+            return;
+        }
         if (deactivateInteractions)
         {
             spriteRenderer.sortingOrder = 99;
