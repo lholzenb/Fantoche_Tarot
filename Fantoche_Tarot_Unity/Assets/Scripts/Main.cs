@@ -1,3 +1,4 @@
+// Weird bugfix for cards getting involuntarily deleted - if you encounter this -> (Code 111)
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -13,6 +14,8 @@ public class Main : MonoBehaviour
     public int pairNumber;
     private bool continuePairs = false;
     private bool startNextRound = false;
+    private bool cardsMayBeDealed = false;
+    private bool cardsWereDealed = false;
      private bool finalPhaseNotYetRun;
     public int currentOutcomePosNeg;
     public int finalScore;
@@ -269,7 +272,7 @@ public class Main : MonoBehaviour
                 temp = "bottom";
                 break;
             default:
-                // Debug.LogError("Card placement failed: A critical error occurred.");
+                //Debug.LogError("Card placement failed: A critical error occurred.");
                 break;
         }
 
@@ -326,6 +329,9 @@ public class Main : MonoBehaviour
                 }
                 RandomizeCard(temp, true, 1);
                 Debug.Log("requested random card on: " + temp);
+                
+                // another weird bugfix (Code 111)
+                isThisSpotFree = false;
             }
             mouseWasReleased = false;
         }
@@ -336,7 +342,29 @@ public class Main : MonoBehaviour
         // Also: We start checking if the pause menu was opened.
         //DisplayPairs();
         PauseMenuChecker();
-        // 2.: Making selection of hand-cards avaiable.
+        // 2.: Making selection of hand-cards avaiable but only after one card was uncovered + starting this round
+
+        // (111) help me man
+        if (startNextRound == true)
+        {
+            startNextRound = false;
+            cardsWereDealed = false;
+            continuePairs = true;
+            allowedAmountOfHandcards += 1;
+        }
+        if (cardsWereDealed == true)
+        {
+            cardsMayBeDealed = false;
+        }
+        else 
+        {
+            if (cardsMayBeDealed)
+            {
+                // don't need to specify that cards my not be dealed lol -> Because up above it does it on its own
+                // cardsWereDealed = true; -> inside DisplayHandCards();
+            }
+        }
+
         DisplayHandCards();
         // 3.: LayCards will be triggered as soon as we have everything prepared.
         LayPrep("prep");
@@ -415,18 +443,19 @@ public class Main : MonoBehaviour
     }
 
     void DisplayHandCards()
-    {
-        // every round we display max. 3 cards - every round we get +1 card
-        if (startNextRound == true)
+    {  
+        if (cardsMayBeDealed == true && cardsWereDealed == false)
         {
-            startNextRound = false;
-            continuePairs = true;
-            allowedAmountOfHandcards += 1;
+            // do something? Or just continue...
+            cardsMayBeDealed = false;
+            cardsWereDealed = true;
         }
         else
         {
             return;
         }
+
+        // every round we display max. 3 cards - every round we get +1 card
 
         if (allowedAmountOfHandcards > 3)
         {
@@ -457,6 +486,8 @@ public class Main : MonoBehaviour
     // more specific card logic ---> Lay, Randomize, RelationshipLogic
     public void RandomizeCard(string requestedSpot, bool isSuposedToLay, int amount = 1)
     {
+        // we allow it as soon as soon as the first card was randomly uncovered (111)
+        cardsMayBeDealed = true;
         List<CardType> possibleCards = new List<CardType>()
         {
         red_is_fire,
@@ -467,6 +498,7 @@ public class Main : MonoBehaviour
 
         if (isSuposedToLay == true)
         {
+            // we allow cards to be dealed as soon as you uncovered (randomized) one card on the field
             CardType randomCard = possibleCards[UnityEngine.Random.Range(0, possibleCards.Count)];
             LayCards(randomCard, requestedSpot);
             backup4 = null;
@@ -596,6 +628,8 @@ public class Main : MonoBehaviour
         {
             // safe is safe - even tho we control it over deactivating interactibles
             Debug.LogWarning("This slot is already assigned! How did you even trigger this interaction?");
+            // How the fuck did this bug even happen? We deactivate it here lol (Code 111)
+            isThisSpotFree = false;
         }
     }
 
