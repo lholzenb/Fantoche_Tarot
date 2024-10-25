@@ -11,6 +11,7 @@ public class DialogueManager : MonoBehaviour
 
     public Main main;
 
+    public bool messageActive = false;
     public int scoreThreshold = 0;
     private int playerScore;
     public Animator animatorDialogue;
@@ -68,9 +69,24 @@ public class DialogueManager : MonoBehaviour
         DisplayDialogue();
     }
 
+    public void PlayerMessage()
+    {
+        messageActive = true;
+        animatorDialogue.SetBool("DialogueOpen", true);
+        DisplayDialogue();
+
+    }
+
     private void DisplayDialogue()
     {
         string response;
+
+        if (messageActive)
+        {
+            response = "Choose 1 or more cards to reveal...";
+            StartCoroutine(TypeSentence(response));
+            return;
+        }
 
         if (playerScore >= scoreThreshold)
         {
@@ -104,9 +120,18 @@ public class DialogueManager : MonoBehaviour
         }
     }
 
+    public void MessageActive()
+    {
+        messageActive = true;
+    }
     public void CloseDialogue()
     {
         animatorDialogue.SetBool("DialogueOpen", false);
+        if (messageActive)
+        {
+            messageActive = false;
+            return;
+        }
         animatorCurtain.SetBool("CurtainWillClose", true);
         Invoke("RestartScene", 1);
     }

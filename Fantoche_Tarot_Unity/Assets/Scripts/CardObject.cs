@@ -127,12 +127,10 @@ public class CardObject : MonoBehaviour
         }
     }
 
-    // Beispielmethode zum Hervorheben der Karte (z.B. durch Skalierung oder Farbe)
     void HighlightCard(bool highlight)
     {
         if (highlight)
         {
-            // Zum Beispiel die Karte etwas vergrößern
             transform.localScale = new Vector3(baseScale.x + 0.2f, baseScale.y + 0.2f, baseScale.z + 0.2f);
             spriteRenderer.sortingOrder = 99;
         }
