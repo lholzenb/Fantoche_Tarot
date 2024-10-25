@@ -1,9 +1,10 @@
-// Weird bugfix for cards getting involuntarily deleted - if you encounter this -> (Code 111)
+// Weird bugfix for cards getting involuntarily deleted - if you encounter this -> (Code 112)
 /*
 yield return new WaitForSeconds(2);
         Current_Handcard1.GetComponent<CardObject>().DeactivateInteractions(false);
         Current_Handcard2.GetComponent<CardObject>().DeactivateInteractions(false);
         Current_Handcard3.GetComponent<CardObject>().DeactivateInteractions(false);
+        Cards improvement -> Code 111
 */
 using System;
 using System.Collections;
@@ -189,10 +190,12 @@ public class Main : MonoBehaviour
                     if (Current_CardLeft == null)
                     {
                         isThisSpotFree = true;
+                        Debug.Log("Is this spot free: " + true);
                     }
                     else
                     {
                         isThisSpotFree = false;
+                        Debug.Log("Is this spot free: " + false);
                     }
                 }
                 else if (nameOfObject == "Card_Holder_Right")
@@ -200,10 +203,12 @@ public class Main : MonoBehaviour
                     if (Current_CardRight == null)
                     {
                         isThisSpotFree = true;
+                        Debug.Log("Is this spot free: " + true);
                     }
                     else
                     {
                         isThisSpotFree = false;
+                        Debug.Log("Is this spot free: " + false);
                     }
                 }
                 else if (nameOfObject == "Card_Holder_Top")
@@ -211,10 +216,12 @@ public class Main : MonoBehaviour
                     if (Current_CardTop == null)
                     {
                         isThisSpotFree = true;
+                        Debug.Log("Is this spot free: " + true);
                     }
                     else
                     {
                         isThisSpotFree = false;
+                        Debug.Log("Is this spot free: " + false);
                     }
                 }
                 else if (nameOfObject == "Card_Holder_Bottom")
@@ -222,10 +229,12 @@ public class Main : MonoBehaviour
                     if (Current_CardBottom == null)
                     {
                         isThisSpotFree = true;
+                        Debug.Log("Is this spot free: " + true);
                     }
                     else
                     {
                         isThisSpotFree = false;
+                        Debug.Log("Is this spot free: " + false);
                     }
                 }
                 else
@@ -237,6 +246,7 @@ public class Main : MonoBehaviour
             {
                 requestedPlacement = "none";
                 isThisSpotFree = false;
+                Debug.Log("Is this spot free: " + false);
             }
 
         }
@@ -279,9 +289,6 @@ public class Main : MonoBehaviour
                 break;
             case "Card_Holder_Bottom":
                 temp = "bottom";
-                break;
-            default:
-                //Debug.LogError("Card placement failed: A critical error occurred.");
                 break;
         }
 
@@ -339,8 +346,9 @@ public class Main : MonoBehaviour
                 RandomizeCard(temp, true, 1);
                 Debug.Log("requested random card on: " + temp);
 
-                // another weird bugfix (Code 111)
+                // another weird bugfix (Code 112)
                 isThisSpotFree = false;
+                Debug.Log("Is this spot free: " + false);
             }
             mouseWasReleased = false;
         }
@@ -693,6 +701,7 @@ public class Main : MonoBehaviour
             Debug.LogWarning("This slot is already assigned! How did you even trigger this interaction?");
             // How the fuck did this bug even happen? We deactivate it here lol (Code 111)
             isThisSpotFree = false;
+            Debug.Log("[HOW THE FUCK DID YOU TRIGGER THIS] Is this spot free: " + false);
         }
     }
 

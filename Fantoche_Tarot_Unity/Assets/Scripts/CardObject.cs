@@ -55,6 +55,7 @@ public class CardObject : MonoBehaviour
     }
     void OnMouseDown()
     {
+        originalPosition = transform.localPosition;
         if (deactivateInteractions)
         {
             spriteRenderer.sortingOrder = 99;
