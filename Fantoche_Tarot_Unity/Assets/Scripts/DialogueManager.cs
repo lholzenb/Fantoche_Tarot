@@ -83,7 +83,7 @@ public class DialogueManager : MonoBehaviour
 
         if (messageActive)
         {
-            response = "Choose 1 or more cards to reveal...";
+            response = "Choose 1 or more cards to reveal... Then lay your hand-cards.";
             StartCoroutine(TypeSentence(response));
             return;
         }

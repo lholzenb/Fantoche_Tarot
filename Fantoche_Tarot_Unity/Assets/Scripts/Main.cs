@@ -1,11 +1,6 @@
-// Weird bugfix for cards getting involuntarily deleted - if you encounter this -> (Code 112)
-/*
-yield return new WaitForSeconds(2);
-        Current_Handcard1.GetComponent<CardObject>().DeactivateInteractions(false);
-        Current_Handcard2.GetComponent<CardObject>().DeactivateInteractions(false);
-        Current_Handcard3.GetComponent<CardObject>().DeactivateInteractions(false);
-        Cards improvement -> Code 111
-*/
+// Weird bugfix for cards getting involuntarily deleted - if you encounter this -> Code 112
+// Cards improvement -> Code 111
+
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -290,6 +285,9 @@ public class Main : MonoBehaviour
             case "Card_Holder_Bottom":
                 temp = "bottom";
                 break;
+            default:
+                temp = "none";
+                break;
         }
 
         if (action == "prep")
@@ -301,7 +299,6 @@ public class Main : MonoBehaviour
                 backup3 = holdingCardRightNow;
                 backup4 = theCardTypeIamHolding;
             }
-
         }
         if (action == "lay")
         {
@@ -316,16 +313,28 @@ public class Main : MonoBehaviour
                 {
                     Destroy(Current_Handcard1);
                     Current_Handcard1 = null; // emty reference
+                    // resetting values (Code 112) -> lol, not the fix
+                    backup1 = "none";
+                    backup2 = false;
+                    backup3 = false;
                 }
                 else if (Current_Handcard2 != null && Current_Handcard2.GetComponent<CardObject>().cardType.Name == theCardTypeIamHolding.Name)
                 {
                     Destroy(Current_Handcard2);
                     Current_Handcard2 = null; // emty reference
+                    // resetting values (Code 112) -> lol, not the fix
+                    backup1 = "none";
+                    backup2 = false;
+                    backup3 = false;
                 }
                 else if (Current_Handcard3 != null && Current_Handcard3.GetComponent<CardObject>().cardType.Name == theCardTypeIamHolding.Name)
                 {
                     Destroy(Current_Handcard3);
                     Current_Handcard3 = null; // emty reference
+                    // resetting values (Code 112) -> lol, not the fix
+                    backup1 = "none";
+                    backup2 = false;
+                    backup3 = false;
                 }
             }
             else if (requestedPlacement != null && isThisSpotFree == true && holdingCardRightNow == false)
@@ -424,7 +433,7 @@ public class Main : MonoBehaviour
                 return;
             }
             theMenuHasBeenOpenedBefore = true;
-            Debug.LogWarning("Pause screen has been opened.");
+            // Debug.LogWarning("Pause screen has been opened.");
 
             // handling all active and relevant colliders
             Collider2D[] allColliders = FindObjectsOfType<Collider2D>(); // temporary to get ALL colliders
@@ -555,7 +564,7 @@ public class Main : MonoBehaviour
     IEnumerator UngreyPls()
     {
         yield return new WaitForSeconds(1f);
-        Debug.LogWarning("and now we want the cards to appear");
+        // Debug.LogWarning("and now we want the cards to appear");
         backup4 = null;
         theCardTypeIamHolding = null;
         if (Current_Handcard1 != null)
@@ -653,7 +662,7 @@ public class Main : MonoBehaviour
         // at the beginning all spots should be open (interaction true)
         // -> set all interactibles to "active"
         GameObject cardPrefab = SelectCardPrefab(cardType);
-
+        isThisSpotFree = false; // (fix Code 112)
         // assigning card type to slots
         if (Current_CardLeft == null && requestedSpot == "left")
         {
@@ -695,12 +704,11 @@ public class Main : MonoBehaviour
             Current_CardBottom.transform.position = new UnityEngine.Vector2(cardBottomPos.x, cardBottomPos.y);
             Debug.Log("Card placed on the bottom: " + Current_CardBottom.GetComponent<CardObject>().cardType.Name);
         }
-        else
+        else if (requestedSpot == "none")
         {
             // safe is safe - even tho we control it over deactivating interactibles
             Debug.LogWarning("This slot is already assigned! How did you even trigger this interaction?");
             // How the fuck did this bug even happen? We deactivate it here lol (Code 111)
-            isThisSpotFree = false;
             Debug.Log("[HOW THE FUCK DID YOU TRIGGER THIS] Is this spot free: " + false);
         }
     }
@@ -871,12 +879,12 @@ public class Main : MonoBehaviour
 
         if (myStrenght == ToCompareWith.GetComponent<CardObject>().cardType.Type)
         {
-            Debug.Log("Positive Return " + myCardObject + " strenght: " + myStrenght + " weakness: " + myWeakness);
+            // Debug.Log("Positive Return " + myCardObject + " strenght: " + myStrenght + " weakness: " + myWeakness);
             return 1;
         }
         else if (myWeakness == ToCompareWith.GetComponent<CardObject>().cardType.Type)
         {
-            Debug.Log("Negative Return " + myCardObject + " strenght: " + myStrenght + " weakness: " + myWeakness);
+            // Debug.Log("Negative Return " + myCardObject + " strenght: " + myStrenght + " weakness: " + myWeakness);
             return -1;
         }
         else
