@@ -107,12 +107,16 @@ public class Main : MonoBehaviour
     [Space(20)]
     [Header("Menu & Stuff")]
     public GameObject PauseMenuObject;
+    public GameObject GreyOutSprite;
+
+    [Space(20)]
     private bool theMenuHasBeenOpenedBefore = false;
     List<Collider2D> collidersSnapshot = new List<Collider2D>();
     void Start()
     {
         Pairs[1].SetActive(true);
         dialogueManager.PlayerMessage();
+        GreyOutSprite.SetActive(false);
 
         // game starts & checking if setup correct & loads first pair
         allowedAmountOfHandcards = 3;
@@ -409,11 +413,21 @@ public class Main : MonoBehaviour
         FinalPhase();
     }
 
+    // stupid fix but ok
+    bool stop = false;
     void JokerDragTest()
     {
+        if (stop)
+        {
+            return;
+        }
         if (theCardIamHolding == "Joker")
         {
-             Debug.LogWarning("Joker got dragged!!!");
+            Debug.LogWarning("Joker got dragged!!!");
+            stop = true;
+
+            // triggering joker view (card gets presented)
+            JokerViewStart();
         }
     }
 
@@ -979,6 +993,28 @@ public class Main : MonoBehaviour
         JokerGlow.SetActive(true);
 
     }
+
+    private void JokerViewStart()
+    {
+        // we enable the greying-out of the background 85%
+        SpriteRenderer spriteRenderer = GreyOutSprite.GetComponent<SpriteRenderer>();
+        Color color = spriteRenderer.color;
+        color.a = 0.0f;
+        GreyOutSprite.SetActive(true);
+        StartCoroutine(GreyOut());
+        // we randomly select a joker card
+        // we display the chosen joker card "zoomed-in" 
+        // we manipulate the result
+        // we start the "end of round" method after a while
+    }
+
+    IEnumerator GreyOut()
+    {
+        Debug.Log("GreyOut Started");
+        yield return new WaitForSeconds(2);
+    }
+
+    // end of round
     IEnumerator ExecuteAfterDelay(float delayInSeconds)
     {
         // Joker glow deactivation?
@@ -1006,7 +1042,6 @@ public class Main : MonoBehaviour
             Pairs[1].SetActive(false);
             Pairs[0].SetActive(true);
         }
-
     }
 }
 
