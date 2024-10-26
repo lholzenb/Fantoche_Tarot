@@ -1457,6 +1457,7 @@ MonoBehaviour:
   reaction_thunder_top: {fileID: 1969584794}
   reaction_thunder_bottom: {fileID: 1947373413}
   PauseMenuObject: {fileID: 191826112}
+  GreyOutSprite: {fileID: 1892847324}
 --- !u!4 &490202649
 Transform:
   m_ObjectHideFlags: 0
@@ -3550,7 +3551,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!212 &1892847325
 SpriteRenderer:
   m_ObjectHideFlags: 0
