@@ -13,7 +13,6 @@ public class CardObject : MonoBehaviour
     private Vector2 originalPosition;
     private bool isHovering = false;
     private bool isHolding = false;
-    private bool now = false;
 
     // adding a type to an object
     public void SetCardType(CardType newCardType)
@@ -66,10 +65,6 @@ public class CardObject : MonoBehaviour
             spriteRenderer.color = new Color(0.8f, 0.8f, 0.8f, 1f);
             isHolding = true;
         }
-        if (cardType.Name == "Joker")
-        {
-            now = true;
-        }
     }
     void OnMouseUp()
     {
@@ -89,21 +84,10 @@ public class CardObject : MonoBehaviour
         HighlightCard(false);
     }
 
-    public bool JokerDragged()
-    {
-        if (now == true)
-        {
-            return true;
-        }
-        else 
-        {
-            return false;
-        }
-        
-    }
-
     void Update()
     {
+        // running this to check if joker was dragged
+
         if (mechanicsHolder.GetComponent<Main>().PauseMenuObject.activeSelf == true)
         {
             return;

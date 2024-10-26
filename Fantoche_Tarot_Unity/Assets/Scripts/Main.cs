@@ -81,6 +81,7 @@ public class Main : MonoBehaviour
 
     [Space(20)]
     public GameObject JokerHolder;
+    public GameObject JokerGlow;
 
     [Space(20)]
     [Header("Card Types")]
@@ -104,7 +105,7 @@ public class Main : MonoBehaviour
     public GameObject reaction_thunder_bottom;
 
     [Space(20)]
-    [Header("Card Types")]
+    [Header("Menu & Stuff")]
     public GameObject PauseMenuObject;
     private bool theMenuHasBeenOpenedBefore = false;
     List<Collider2D> collidersSnapshot = new List<Collider2D>();
@@ -117,7 +118,12 @@ public class Main : MonoBehaviour
         allowedAmountOfHandcards = 3;
         startNextRound = true;
         finalPhaseNotYetRun = true;
+
+        // getting joker to work
+        joker_card = new CardType("Joker", "Joker card resolves a truce by being laid.", "none", "none");
+        JokerHolder.AddComponent<CardObject>().SetCardType(joker_card);
         JokerHolder.GetComponent<CardObject>().DeactivateInteractions(true, false);
+
         if (CardLeftHolder == null || CardRightHolder == null || CardTopHolder == null || CardBottomHolder == null)
         {
             Debug.LogError("CARD SPOTS NOT ASSIGNED!");
@@ -129,6 +135,7 @@ public class Main : MonoBehaviour
         HandcardHolder1.SetActive(false);
         HandcardHolder2.SetActive(false);
         HandcardHolder3.SetActive(false);
+        JokerGlow.SetActive(false);
 
         // read positions of cards in graphical layout
         cardLeftPos = CardLeftHolder.transform.position;
@@ -165,9 +172,6 @@ public class Main : MonoBehaviour
         Debug.Log(green_is_air.Name + ": " + green_is_air.Description);
         blue_is_water = new CardType("Blue", "Water beats fire.", "yellow_is_earth", "red_is_fire");
         Debug.Log(blue_is_water.Name + ": " + blue_is_water.Description);
-
-        // defining card types - other cards
-        // joker_card = new CardType("Joker","Joker card resolves a truce by being laid upside down (negative) or in the correct position (positive).","none","none");
     }
 
     // tracking card movements
@@ -258,7 +262,10 @@ public class Main : MonoBehaviour
 
             if (nameOfObject != "none")
             {
-                theCardIamHolding = cardType.Name;
+                if(cardType != null)
+                {
+                    theCardIamHolding = cardType.Name;
+                }
                 theCardTypeIamHolding = cardType;
             }
             else
@@ -396,8 +403,18 @@ public class Main : MonoBehaviour
         LayPrep("prep");
         // 4.: We calculate the outcome for the cards present on the board.
         CardRelationshipLogic();
-        // 5.: We check, if the final phase may begin and trigger it.
+        // 5.: We check that the joker card got "touched".
+        JokerDragTest();
+        // 6.: We check, if the final phase may begin and trigger it.
         FinalPhase();
+    }
+
+    void JokerDragTest()
+    {
+        if (theCardIamHolding == "Joker")
+        {
+             Debug.LogWarning("Joker got dragged!!!");
+        }
     }
 
     //void DisplayPairs()
@@ -723,7 +740,7 @@ public class Main : MonoBehaviour
         {
             if (CardMathematicalSummary("left") >= 1)
             {
-                Debug.Log("hearts");
+                // Debug.Log("hearts");
                 currentOutcomeTemp += 1;
                 reaction_hearts_left.SetActive(true);
                 reaction_thunder_left.SetActive(false);
@@ -745,7 +762,7 @@ public class Main : MonoBehaviour
         {
             if (CardMathematicalSummary("right") >= 1)
             {
-                Debug.Log("hearts");
+                // Debug.Log("hearts");
                 currentOutcomeTemp += 1;
                 reaction_hearts_right.SetActive(true);
                 reaction_thunder_right.SetActive(false);
@@ -767,7 +784,7 @@ public class Main : MonoBehaviour
         {
             if (CardMathematicalSummary("top") >= 1)
             {
-                Debug.Log("hearts");
+                // Debug.Log("hearts");
                 currentOutcomeTemp += 1;
                 reaction_hearts_top.SetActive(true);
                 reaction_thunder_top.SetActive(false);
@@ -789,7 +806,7 @@ public class Main : MonoBehaviour
         {
             if (CardMathematicalSummary("bottom") >= 1)
             {
-                Debug.Log("hearts");
+                // Debug.Log("hearts");
                 currentOutcomeTemp += 1;
                 reaction_hearts_bottom.SetActive(true);
                 reaction_thunder_bottom.SetActive(false);
@@ -818,7 +835,7 @@ public class Main : MonoBehaviour
             temp += CardCompareWith(Current_CardTop, Current_CardLeft);
             temp += CardCompareWith(Current_CardBottom, Current_CardLeft);
             temp += CardCompareWith(Current_CardRight, Current_CardLeft);
-            //Debug.Log("CardMathematicalSummary (left): " + temp);
+            // Debug.Log("CardMathematicalSummary (left): " + temp);
             return temp;
         }
         else if (position == "right")
@@ -828,7 +845,7 @@ public class Main : MonoBehaviour
             temp += CardCompareWith(Current_CardTop, Current_CardRight);
             temp += CardCompareWith(Current_CardBottom, Current_CardRight);
             temp += CardCompareWith(Current_CardLeft, Current_CardRight);
-            //Debug.Log("CardMathematicalSummary (right): " + temp);
+            // Debug.Log("CardMathematicalSummary (right): " + temp);
             return temp;
         }
         else if (position == "top")
@@ -937,10 +954,13 @@ public class Main : MonoBehaviour
         {
             Debug.Log("time for joker");
             JokerHolder.GetComponent<CardObject>().DeactivateInteractions(false, true);
+            StartCoroutine(GlowDelay());
         }
-
-        // for presentation!! so that we can click the joker
-        StartCoroutine(ExecuteAfterDelay(3.0f));
+        else 
+        {
+            // finishing game with clear result
+            StartCoroutine(ExecuteAfterDelay(1.0f));
+        }
 
         // coroutine to start animations and finish the round & prepare the next one
         // startNextRound = true; NOT YET
@@ -952,8 +972,17 @@ public class Main : MonoBehaviour
         // wieder deaktivieren?
         // JokerHolder.GetComponent<CardObject>().DeactivateInteractions(true, false);
     }
+
+    IEnumerator GlowDelay()
+    {
+        yield return new WaitForSeconds(0.66f);
+        JokerGlow.SetActive(true);
+
+    }
     IEnumerator ExecuteAfterDelay(float delayInSeconds)
     {
+        // Joker glow deactivation?
+        JokerGlow.SetActive(false);
         Debug.Log("Coroutine started. Waiting for " + delayInSeconds + " seconds...");
 
         // Wartet die angegebene Zeit
