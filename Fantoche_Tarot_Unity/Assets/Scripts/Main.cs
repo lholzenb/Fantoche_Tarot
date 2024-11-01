@@ -54,6 +54,7 @@ public class Main : MonoBehaviour
     [Header("Setup & General")]
     public List<GameObject> Pairs = new List<GameObject>();
     public float TimePassedUntilHandcardsAreRevealed = 1.5f;
+    System.Random random = new System.Random();
 
     [Space(20)]
     public GameObject cardPrefab_HandcardTypeBlue;
@@ -108,16 +109,26 @@ public class Main : MonoBehaviour
     [Header("Menu & Stuff")]
     public GameObject PauseMenuObject;
     public GameObject GreyOutSprite;
+    private bool randomLoveOrDeath;
+    private bool checkForJokerRelease = false;
+    private int scoreManipulation;
+    
+    public GameObject SpriteGood;
+    public GameObject SpriteBad;
+    public GameObject Glow1;
+    public GameObject Glow2;
 
     [Space(20)]
     private bool theMenuHasBeenOpenedBefore = false;
     List<Collider2D> collidersSnapshot = new List<Collider2D>();
     void Start()
     {
+        SpriteGood.SetActive(false);
+        SpriteBad.SetActive(false);
         Pairs[1].SetActive(true);
-        dialogueManager.PlayerMessage();
         GreyOutSprite.SetActive(false);
-
+        dialogueManager.PlayerMessage();
+        
         // game starts & checking if setup correct & loads first pair
         allowedAmountOfHandcards = 3;
         startNextRound = true;
@@ -409,8 +420,24 @@ public class Main : MonoBehaviour
         CardRelationshipLogic();
         // 5.: We check that the joker card got "touched".
         JokerDragTest();
+        if (checkForJokerRelease)
+        {
+            if (holdingCardRightNow == false)
+            {
+                JokerHolder.SetActive(false);
+            }
+            
+        }
         // 6.: We check, if the final phase may begin and trigger it.
         FinalPhase();
+    }
+
+    void LateUpdate()
+    {
+        if (checkForJokerRelease)
+        {
+            JokerHolder.GetComponent<SpriteRenderer>().sortingOrder = 111;
+        }
     }
 
     // stupid fix but ok
@@ -991,27 +1018,99 @@ public class Main : MonoBehaviour
     {
         yield return new WaitForSeconds(0.66f);
         JokerGlow.SetActive(true);
-
     }
 
     private void JokerViewStart()
     {
         // we enable the greying-out of the background 85%
-        SpriteRenderer spriteRenderer = GreyOutSprite.GetComponent<SpriteRenderer>();
-        Color color = spriteRenderer.color;
-        color.a = 0.0f;
-        GreyOutSprite.SetActive(true);
         StartCoroutine(GreyOut());
-        // we randomly select a joker card
-        // we display the chosen joker card "zoomed-in" 
-        // we manipulate the result
+
+        checkForJokerRelease = true;
+        // we randomly select a joker card & manipulate the result
+        randomLoveOrDeath = random.Next(2) == 0;
+        if (randomLoveOrDeath)
+        {
+            scoreManipulation = 10;
+        }
+        else
+        {
+            scoreManipulation = -10;
+        }
+
         // we start the "end of round" method after a while
+        StartCoroutine(ExecuteAfterDelay(2.5f));
     }
 
-    IEnumerator GreyOut()
+    IEnumerator GreyOut(bool unoReverse = false)
     {
-        Debug.Log("GreyOut Started");
-        yield return new WaitForSeconds(2);
+        SpriteRenderer spriteRenderer = GreyOutSprite.GetComponent<SpriteRenderer>();
+        Color color = spriteRenderer.color;
+        if (unoReverse)
+        {
+             for (int i = 85; i >= 0; i--)
+             {
+                color.a = i / 100.0f;
+                yield return new WaitForSeconds(0.001f);
+                GreyOutSprite.GetComponent<SpriteRenderer>().color = color;
+            }
+        }
+        else
+        {
+            color.a = 0.0f;
+            GreyOutSprite.SetActive(true);
+            Debug.Log("GreyOut Started");
+            for (int i = 0; i < 85; i++)
+            {
+                color.a = i / 100.0f;
+                yield return new WaitForSeconds(0.001f);
+                GreyOutSprite.GetComponent<SpriteRenderer>().color = color;
+            }
+            yield return new WaitForSeconds(0);
+
+            // we display the chosen joker card "zoomed-in"  + delete the card dragged
+            if (randomLoveOrDeath)
+            {
+                SpriteGood.SetActive(true);
+                SpriteBad.SetActive(false);
+                StartCoroutine(SpriteGoodBadFadeIn(SpriteGood));
+            }
+            else
+            {
+                SpriteGood.SetActive(false);
+                SpriteBad.SetActive(true);
+                StartCoroutine(SpriteGoodBadFadeIn(SpriteBad));
+            }
+            JokerHolder.SetActive(false);
+        }
+    }
+
+    IEnumerator SpriteGoodBadFadeIn(GameObject InputObject, bool deactivate = false)
+    {
+        SpriteRenderer spriteRendererNew = InputObject.GetComponent<SpriteRenderer>();
+        Color colorLocal = spriteRendererNew.color;
+        if (deactivate)
+        {
+            Glow1.SetActive(false);
+            Glow2.SetActive(false);
+            StartCoroutine(GreyOut(true));
+            for (int i = 0; i < 100; i++)
+            {
+                colorLocal.a -= i / 100.0f;
+                yield return new WaitForSeconds(0.02f);
+                InputObject.GetComponent<SpriteRenderer>().color = colorLocal;
+
+            }
+        }
+        else
+        {
+            colorLocal.a = 0.0f;
+            for (int i = 0; i < 100; i++)
+            {
+                colorLocal.a = i / 100.0f;
+                yield return new WaitForSeconds(0.001f);
+                InputObject.GetComponent<SpriteRenderer>().color = colorLocal;
+            }
+        }
     }
 
     // end of round
@@ -1028,7 +1127,10 @@ public class Main : MonoBehaviour
         Debug.Log("3 seconds passed, now executing the rest of the code.");
 
         // Füge hier deinen Code hinzu, der nach der Verzögerung ausgeführt werden soll
-        finalScore = currentOutcomePosNeg;
+        StartCoroutine(SpriteGoodBadFadeIn(SpriteGood, true));
+        StartCoroutine(SpriteGoodBadFadeIn(SpriteBad, true));
+        finalScore = currentOutcomePosNeg + scoreManipulation;
+        currentOutcomePosNeg = finalScore;
         dialogueManager.UpdateScore();
 
         // Update Couples Sprite
