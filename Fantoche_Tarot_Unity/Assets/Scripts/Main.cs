@@ -113,6 +113,7 @@ public class Main : MonoBehaviour
     private bool checkForJokerRelease = false;
     private int scoreManipulation;
     
+    public GameObject TrackerHolder;
     public GameObject SpriteGood;
     public GameObject SpriteBad;
     public GameObject Glow1;
@@ -130,7 +131,8 @@ public class Main : MonoBehaviour
         dialogueManager.PlayerMessage();
         
         // game starts & checking if setup correct & loads first pair
-        allowedAmountOfHandcards = 3;
+        TrackerHolder = GameObject.Find("StaticTrackerHolder");
+        allowedAmountOfHandcards = TrackerHolder.GetComponent<StaticTracker>().s_allowedCards;
         startNextRound = true;
         finalPhaseNotYetRun = true;
 
@@ -334,6 +336,7 @@ public class Main : MonoBehaviour
                 if (Current_Handcard1 != null && Current_Handcard1.GetComponent<CardObject>().cardType.Name == theCardTypeIamHolding.Name)
                 {
                     Destroy(Current_Handcard1);
+                    allowedAmountOfHandcards -=1;
                     Current_Handcard1 = null; // emty reference
                     // resetting values (Code 112) -> lol, not the fix
                     backup1 = "none";
@@ -343,6 +346,7 @@ public class Main : MonoBehaviour
                 else if (Current_Handcard2 != null && Current_Handcard2.GetComponent<CardObject>().cardType.Name == theCardTypeIamHolding.Name)
                 {
                     Destroy(Current_Handcard2);
+                    allowedAmountOfHandcards -=1;
                     Current_Handcard2 = null; // emty reference
                     // resetting values (Code 112) -> lol, not the fix
                     backup1 = "none";
@@ -352,6 +356,7 @@ public class Main : MonoBehaviour
                 else if (Current_Handcard3 != null && Current_Handcard3.GetComponent<CardObject>().cardType.Name == theCardTypeIamHolding.Name)
                 {
                     Destroy(Current_Handcard3);
+                    allowedAmountOfHandcards -=1;
                     Current_Handcard3 = null; // emty reference
                     // resetting values (Code 112) -> lol, not the fix
                     backup1 = "none";
@@ -398,7 +403,17 @@ public class Main : MonoBehaviour
             startNextRound = false;
             cardsWereDealed = false;
             continuePairs = true;
+
+            if (allowedAmountOfHandcards < 0)
+            {
+                allowedAmountOfHandcards = 0;
+            }
             allowedAmountOfHandcards += 1;
+            if (allowedAmountOfHandcards > 3)
+            {
+                allowedAmountOfHandcards = 3;
+            }
+            TrackerHolder.GetComponent<StaticTracker>().changeAllowedCards(allowedAmountOfHandcards);
         }
         if (cardsWereDealed == true)
         {
@@ -677,6 +692,11 @@ public class Main : MonoBehaviour
                 Current_Handcard1.AddComponent<CardObject>().SetCardType(cardType);
                 Current_Handcard1.GetComponent<CardObject>().DeactivateInteractions(true);
                 StartCoroutine(ShortDelayPosition(1));
+                if (allowedAmountOfHandcards == 1)
+                {
+                    Debug.Log("allowed 1");
+                    StartCoroutine(UngreyPls());
+                }
             }
             else if (Current_Handcard2 == null)
             {
@@ -684,6 +704,11 @@ public class Main : MonoBehaviour
                 Current_Handcard2.AddComponent<CardObject>().SetCardType(cardType);
                 Current_Handcard2.GetComponent<CardObject>().DeactivateInteractions(true);
                 StartCoroutine(ShortDelayPosition(2));
+                if (allowedAmountOfHandcards == 2)
+                {
+                    Debug.Log("allowed 2");
+                    StartCoroutine(UngreyPls());
+                }
             }
             else if (Current_Handcard3 == null)
             {
@@ -691,6 +716,7 @@ public class Main : MonoBehaviour
                 Current_Handcard3.AddComponent<CardObject>().SetCardType(cardType);
                 Current_Handcard3.GetComponent<CardObject>().DeactivateInteractions(true);
                 StartCoroutine(ShortDelayPosition(3));
+                Debug.Log("allowed 3");
                 StartCoroutine(UngreyPls());
             }
         }
@@ -978,12 +1004,13 @@ public class Main : MonoBehaviour
             }
             if (Current_Handcard2 != null)
             {
-                Current_Handcard2.GetComponent<CardObject>().DeactivateInteractions(true, false);
+                Current_Handcard2.GetComponent<CardObject>().DeactivateInteractions(true, false);   
             }
             if (Current_Handcard3 != null)
             {
                 Current_Handcard3.GetComponent<CardObject>().DeactivateInteractions(true, false);
             }
+            
         }
         else
         {
@@ -1131,6 +1158,11 @@ public class Main : MonoBehaviour
         StartCoroutine(SpriteGoodBadFadeIn(SpriteBad, true));
         finalScore = currentOutcomePosNeg + scoreManipulation;
         currentOutcomePosNeg = finalScore;
+        if (allowedAmountOfHandcards < 0)
+        {
+            allowedAmountOfHandcards = 0;
+        }
+        TrackerHolder.GetComponent<StaticTracker>().changeAllowedCards(allowedAmountOfHandcards);
         dialogueManager.UpdateScore();
 
         // Update Couples Sprite
