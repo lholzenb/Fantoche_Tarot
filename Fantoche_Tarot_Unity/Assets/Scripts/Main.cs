@@ -543,10 +543,16 @@ public class Main : MonoBehaviour
     private IEnumerator DelayHandcardHolders()
     {
         yield return new WaitForSeconds(1.4f);
-        
         HandcardHolder1.SetActive(true);
-        HandcardHolder2.SetActive(true);
-        HandcardHolder3.SetActive(true);
+        if (allowedAmountOfHandcards > 1)
+        {
+            HandcardHolder2.SetActive(true);
+            if (allowedAmountOfHandcards > 2)
+            {
+                HandcardHolder3.SetActive(true);
+            }
+        }
+
     }
     void DisplayHandCards()
     {
@@ -660,14 +666,14 @@ public class Main : MonoBehaviour
         {
             case 1:
                 Current_Handcard1.transform.position = new UnityEngine.Vector2(handcard1Pos.x, handcard1Pos.y);
+                HandcardHolder1.SetActive(false);
                 break;
             case 2:
                 Current_Handcard2.transform.position = new UnityEngine.Vector2(handcard2Pos.x, handcard2Pos.y);
+                HandcardHolder2.SetActive(false);
                 break;
             case 3:
                 Current_Handcard3.transform.position = new UnityEngine.Vector2(handcard3Pos.x, handcard3Pos.y);
-                HandcardHolder1.SetActive(false);
-                HandcardHolder2.SetActive(false);
                 HandcardHolder3.SetActive(false);
                 break;
         }
